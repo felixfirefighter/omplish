@@ -15,6 +15,18 @@ Manual tasks, planning, habits, Focus, export, and already loaded UI must remain
 or push configuration is absent. Every capability below must meet its acceptance criteria and the
 gates in `docs/QUALITY.md`.
 
+### Urgent hardening priority
+
+The user-authorized A01–A09 repairs in `docs/IMPLEMENTATION_PLAN.md` U00–U10 take precedence over
+remaining Companion and P0–P8 work. They preserve existing capabilities while repairing data loss,
+session continuity, transactions, resource limits, dependencies, and desktop/release safety.
+Acceptance requires the mapped regressions and canonical quality gates; the architecture audit is
+evidence of defects, not evidence that the repairs have shipped.
+
+The selected continuity scope is browser cookie renewal plus OS-protected desktop identity recovery.
+Browser recovery after lost/expired cookies is deferred. A local username never proves ownership;
+retained data must not be deleted or silently reassigned when recovery is unavailable.
+
 ### 0. Ameth Companion post-release priority
 
 The user has explicitly authorized Ameth Companion to be implemented ahead of the remaining P0–P8
@@ -92,6 +104,12 @@ Acceptance:
 - Planning surfaces open the same authorized task details and recover from stale/network/offline
   writes without losing user input.
 - The application starts and all manual workflows function with no `OPENAI_API_KEY`.
+- Ordinary launch and retry, including legacy bootstrap calls, preserve an authenticated workspace;
+  demo reset and profile deletion require explicit intent.
+- Active browser use renews both the server session and browser cookie. Missing/expired credentials
+  cannot reclaim an existing workspace; browser recovery remains outside this release.
+- Optional provider operations have shared deployment and actor admission limits that survive actor
+  rotation and concurrent server processes; provider failure never blocks manual workflows.
 
 ### 3. Task recurrence and occurrence state
 
@@ -204,7 +222,7 @@ Acceptance:
 - Deterministic isolated demo/reset covers the full release without exposing shared credentials.
 - Local web, PostgreSQL, migrations, active reminder worker, production build, and health checks run
   reproducibly through documented commands and Docker Compose.
-- Submission/demo material distinguishes the stable deadline candidate from later unmerged work and
+- Submission/demo material distinguishes a verified candidate from unmerged/unverified work and
   claims only verified behavior.
 
 Acceptance:
@@ -237,6 +255,12 @@ Acceptance:
   location checks. The browser/PWA path remains independently supported.
 - Core manual workflows pass with no `OPENAI_API_KEY`; the AI surface reports unavailable
   configuration/network rather than blocking the app.
+- Fresh and existing desktop clusters require authenticated, least-privilege application access and
+  OS-user-protected credentials; upgrades preserve data and the existing instance secret.
+- An enrolled desktop installation recovers the same actor after session expiry/cookie loss using
+  separate OS-protected proof. An unenrolled legacy installation with no valid session preserves
+  its data and reports recovery unavailable; it never guesses an actor.
+- Startup, quit, and child failure have bounded, verified cleanup and an explicit recovery state.
 - Each shipped runtime binary has a pinned source/version, checksum, and license notice in the
   release record. Production distribution includes signing/notarization evidence.
 
@@ -256,8 +280,10 @@ Acceptance:
   public API, CLI, or MCP server.
 - Native/mobile/watch applications, browser extensions, widgets, OS global shortcuts, voice, location,
   or share-target integrations beyond the Electron desktop shell and installable web app.
-- Billing, subscriptions, quotas, advertisements, premium gates, autonomous agent behavior, or AI
-  deletion/completion.
+- Browser account recovery after cookie loss, recovery-code/email/password UI, or username-based
+  ownership recovery. Browser cookie renewal and enrolled desktop recovery remain active repairs.
+- Billing, subscriptions, commercial quota tiers, advertisements, premium gates, autonomous agent
+  behavior, or AI deletion/completion.
 
 ## Later roadmap — not part of the active goal
 

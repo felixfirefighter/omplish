@@ -69,3 +69,27 @@ The raw brain dump is not persisted by default.
 - Cross-user selected-task/proposal denial and unknown-reference tests.
 - Review edit/deselect, allowed-action, forbidden-action, expiry, stale-version, atomic rollback, and idempotent retry tests.
 - End-to-end “propose, review, apply” test proving no mutation occurs before the second action.
+
+## Urgent provider admission acceptance
+
+U06 in `docs/IMPLEMENTATION_PLAN.md` adds one assistant-owned admission/execution boundary for
+planner, check-in, Ameth chat, prompt analysis, and key verification, including profile and server
+keys. Freeze validated deployment/actor budgets, concurrency, input/output limits, timeouts, lease
+duration, and bounded retention before implementing its storage. These are operational abuse limits,
+not billing or commercial quota tiers.
+
+Acquire shared admission atomically in a short PostgreSQL transaction and release the connection
+before provider HTTP. Deployment limits survive actor churn/reset and span processes. Every outcome
+releases its active slot; crashes have bounded lease expiry. A dispatched timeout does not establish
+that provider cost was refunded. Rejection invokes the provider zero times; unavailable admission
+storage disables provider calls while manual workflows remain available.
+
+Use database-authoritative time; leases outlast enforced local attempt/cancellation deadlines.
+Disable hidden retries or charge every attempt, and revalidate paused work before dispatch after
+expiry. Local in-flight limits cannot guarantee that cancelled upstream work has stopped.
+
+Any new typed buckets/leases are assistant-owned, contain only opaque operational metadata, and pass
+the canonical data-model/migration gate before creation. Do not reuse identity's Better Auth limiter
+table or add a queue/Redis service. Tests cover all provider paths, multi-process contention, actor
+rotation, boundary rollover, cancellation, crash expiry, redaction, and provider-degraded behavior.
+This section defines repair acceptance; it does not claim admission control is implemented.

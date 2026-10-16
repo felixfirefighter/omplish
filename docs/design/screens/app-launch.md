@@ -15,10 +15,13 @@ authorization, and is written only after the internal isolated workspace bootstr
 |---|---|
 | Default | Direct app launch surface with the scripted onboarding conversation when no cached username exists. |
 | Existing profile | Load the existing session and onboarding state; offer the daily check-in, then enter `/today` without resetting workspace data. |
+| Missing local username | Preserve any valid authenticated workspace; collecting a display name must not reset or replace that actor. |
 | Loading | Keep the current step visible, disable duplicate submission, and announce workspace preparation or save progress. |
 | Error | Keep the current input editable, explain the failed operation, and offer retry. |
 | Offline | Keep the dialog readable, disable the bootstrap action, and say that one connection is required. |
 | Permission | The username never grants access; protected routes still require the internal server actor. |
+| Lost browser session | Explain that the previous workspace cannot be recovered through a username; creation of a new workspace is separate and does not delete retained data. |
+| Desktop session recovery | The main process restores the enrolled actor with OS-protected proof; unavailable proof produces an honest recovery error and preserves data. |
 | Success | Cache the trimmed username, persist onboarding/check-in state, and enter `/today`. |
 
 ## Layout and accessibility
@@ -29,5 +32,7 @@ authorization, and is written only after the internal isolated workspace bootstr
 - Escape and outside clicks cannot dismiss required first-run setup.
 - Initial focus enters the active field; typewriter copy is skippable and reduced motion removes its delay.
 - Errors use an alert and retain the current input value.
+- Ordinary retry is nondestructive, including legacy bootstrap calls. Optional provider-setting
+  failure offers a degraded manual path without overwriting the stored credential.
 - The dialog and launch surface meet the shared keyboard, touch, responsive, theme, and reduced-motion
   contracts at 1440, 1024, and 390 CSS px.

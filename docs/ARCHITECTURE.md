@@ -132,6 +132,11 @@ Domain tests must cover spring-forward/fall-back behavior for at least one repre
   context-isolated desktop marker.
 - Desktop local writes are ordinary authenticated application writes to the per-user local database.
   They are not queued, replicated, or merged with another device.
+- Urgent desktop hardening preserves that boundary: Electron owns process lifetime and OS-protected
+  credential storage; identity owns enrollment/recovery and session issuance behind an explicit
+  trusted process channel. Renderer/preload never receives a recovery capability. Database
+  bootstrap/migration credentials are separate from least-privilege runtime credentials. Exact
+  upgrade/protocol gates are U07–U09 in `docs/IMPLEMENTATION_PLAN.md`, not existing runtime guarantees.
 
 These boundaries authorize only the capabilities listed in `docs/SCOPE.md`. Stage A-D remain later
 roadmap context and contribute no dormant route, table, provider, or framework to this release.

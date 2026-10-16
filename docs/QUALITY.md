@@ -80,10 +80,13 @@ evidence separate from presentation-clean comparison captures.
 2. Contextually quick-add and inspect a task.
 3. Add priority, Markdown, tag, checklist item, subtask, organization, and schedule.
 4. Reorder through keyboard-accessible controls; search; complete/undo; cancel/restore.
-5. Clear the internal browser session; protected data and export require the direct-launch bootstrap.
+5. Verify active-use cookie and DB-session renewal. After clearing browser credentials, protected
+   data/export remain denied; a new workspace is not recovery of the previous actor. Desktop recovery
+   is verified separately in G10.
 
-Forced: invalid input, stale update, atomic create/schedule failure, network/offline write, and User B
-guessing User A identifiers.
+Forced: invalid input, stale update, atomic create/schedule failure, network/offline write, User B
+guessing User A identifiers, failed launch → Retry, missing username with valid session, legacy
+bootstrap calls, and unreadable optional provider settings. Ordinary retries preserve existing data.
 
 ### G2 — Plan across time
 
@@ -113,7 +116,9 @@ proposal, duplicate apply, and concurrent task change. Every pre-apply failure w
 1. Reset isolated demo twice without shared state.
 2. Export and validate the current versioned document.
 3. Lose connectivity in an open page; rendered data stays visible/read-only and writes are disabled.
-4. Clear the internal browser session; private routes/export require the direct-launch bootstrap.
+4. Clear the internal browser session; private routes/export cannot expose the previous actor's data
+   without ownership proof. Browser cookie-loss recovery is deferred; creation cannot delete the old
+   workspace or be presented as its recovery.
 5. Repeat local health, migration, demo, and critical paths in a clean browser.
 
 Forced: export failure, second-user fixture, database unavailable, missing providers, and duplicate
@@ -188,7 +193,15 @@ Forced: cache update/removal, no authenticated content in Cache Storage, unsuppo
    signing/notarization metadata, and absence of secrets or development services.
 6. Run `pnpm electron:runtime-smoke -- --app-dir <unpacked-app>` in the release environment, then run
    `pnpm electron:smoke -- --app-dir <unpacked-app>` from the interactive native desktop session and
-   retain both JSON results plus the platform signing verification output.
+   retain both JSON results. Signed distribution also requires platform signing verification output;
+   unsigned test/prerelease evidence must explicitly record unsigned status.
+7. Enroll the desktop actor, expire/clear its cookies, change the port, and restart/upgrade; the same
+   actor/task IDs must survive through OS-protected proof. Deny forged/foreign/revoked proof and
+   untrusted enrollment; legacy profiles with no session or enrolled proof retain data without actor
+   guessing. Reset cannot resurrect a deleted actor.
+8. Verify fresh and legacy authenticated DB access, scoped migration/runtime roles, wrong/empty
+   password and second-OS-user denial, interruption-safe upgrade, and full stopped-fixture restore.
+   Test post-ready child failure and quit during startup; confirm owned processes actually exit.
 
 Forced: missing runtime artifact, occupied loopback port, malformed local database, migration failure,
 crash during startup/shutdown, second-instance launch, read-only install directory, no OpenAI key,
@@ -198,6 +211,7 @@ offline AI request, and attempted remote navigation from the renderer.
 
 | Package | Required evidence |
 |---|---|
+| U00–U10 | A01–A09 mapped regressions, real-DB transaction/quota/admission tests, browser renewal, native auth/recovery/lifecycle/upgrade/restore evidence, exact-SHA artifact gates, and `pnpm verify`; browser recovery explicitly deferred |
 | LF00 | conflict-free contracts + existing-core baseline |
 | P0 | approved proof/final screenshots + design/a11y/behavior non-regression |
 | P1 | G1–G4 + atomicity/freshness/origin/provider-degraded tests |
@@ -278,6 +292,8 @@ existence disclosure.
 - Logs/job/export/cache contain no user content, emails, sessions, OpenAI/VAPID keys, push endpoints,
   subscription auth, or provider payloads.
 - Run secret, production dependency, font/asset, and license inventory gates.
+- Audit bundled Electron/Node/PostgreSQL and image OS packages separately from npm. Desktop runtime
+  credentials and recovery proof require native OS-permission/ACL and secret-exposure evidence.
 
 Failure: exploitable input/output, content/secret exposure, unsafe private cache, or applicable
 unresolved high/critical advisory/license conflict.
@@ -297,6 +313,10 @@ unbounded expansion, or stored derived counter.
   overflow, ownership/version/idempotency/atomic apply, and zero pre-apply writes.
 - Recurring occurrences may be bounded context but AI cannot create/edit recurrence, habits, Focus, or
   reminders in this release.
+- Prove shared deployment/actor admission across all provider operations and processes, including
+  rejected-call zero dispatch, actor churn, cancellation, crash/lease expiry, and manual fallback.
+  Use database time and bounded attempt/lease policy; distinguish local cancellation from upstream
+  work actually stopping and never imply an exact currency budget from call limits.
 
 Failure: autonomous/hidden write, illegal schedule/action, stale overwrite, or content oversharing.
 
@@ -328,6 +348,9 @@ serious/critical axe issue, or design-contract mismatch.
 - Follow README from a fresh clone through PostgreSQL, migrations, seed readiness, web, active worker,
   demo, golden paths, export, production build/Compose, and provider-degraded use.
 - Verify video/screenshots/README describe the same release commit and expose no secrets/personal data.
+- Automatic unsigned prereleases must wait for canonical and declared native gates for the same
+  immutable source SHA and tested artifact checksums. Failed, cancelled, skipped, or missing required
+  evidence blocks publication. Signed/notarized production distribution keeps its separate gate.
 
 Failure: corruption, duplicate effective write/delivery, hidden setup step, unhealthy process,
 unreproducible local demo, or unverified public claim.

@@ -5,7 +5,7 @@ truth, not a progress log. Feature authority remains in `docs/SCOPE.md`.
 
 ## Goal objective
 
-> Implement and audit the Omplish Local-first Full Release exactly as specified by the repository's current-truth contracts. The user-authorized Ameth Companion package takes priority before remaining P0–P8 work: it adds optional deterministic progression, private transparent summaries, and non-persistent companion chat without gating manual workflows or weakening review-before-apply AI. Then continue the approved Editorial Focus, local core, recurrence, habits, Focus, PWA, reminders, portability, and Electron work. Follow `docs/IMPLEMENTATION_PLAN.md`, keep every provider optional, preserve canonical task/time data and review-before-apply AI, and pass `docs/QUALITY.md`.
+> Implement and audit the Omplish Local-first Full Release exactly as specified by the repository's current-truth contracts. First complete urgent architecture remediation U00–U10, including browser cookie renewal and OS-protected desktop identity recovery; browser recovery after cookie loss is deferred. Then finish remaining Ameth Companion acceptance before remaining P0–P8 work. Companion adds optional deterministic progression, private transparent summaries, and non-persistent chat without gating manual workflows or weakening review-before-apply AI. Continue the approved Editorial Focus, local core, recurrence, habits, Focus, PWA, reminders, portability, and Electron work. Follow `docs/IMPLEMENTATION_PLAN.md`, keep every provider optional, preserve canonical task/time data and review-before-apply AI, and pass `docs/QUALITY.md`.
 
 ## Required reading order
 
@@ -32,8 +32,8 @@ Before the first change in each package, read:
   mutation queues, or cross-device sync.
 - P0 changes presentation only. Its five-screen proof must receive explicit user screenshot approval
   before broad restyling or feature UI begins.
-- Preserve the stable deadline candidate while new packages are incomplete. No partial package is
-  merged into the release candidate merely because the submission deadline is close.
+- Preserve existing data/work while packages are incomplete. The audited checkout is not a verified
+  green fallback; no partial package becomes a release candidate because a deadline is close.
 - Keep one TypeScript repository, one Next.js application, one PostgreSQL database, and one pg-boss
   worker entry point. Do not add a service or framework when the approved stack covers the need.
 - Route/page files stay thin; application/domain rules and ownership checks remain in the owning
@@ -67,8 +67,9 @@ Before the first change in each package, read:
   explicitly listed non-visual stabilization may continue without treating silence as approval.
 - Report evidence and options when a committed item is at risk. Do not silently cut acceptance,
   loosen a test, or substitute a later feature.
-- Keep the hackathon submission path safe: if a new package is not green and approved by its cutoff,
-  use the last green candidate rather than rush an unverified merge.
+- Historical hackathon dates do not relax current acceptance. Automatic unsigned prereleases must
+  consume the same source/artifact bytes that passed required verification; production signing
+  requirements remain separate. Local verification does not itself authorize a remote push/publish.
 
 ## Completion definition
 
@@ -90,11 +91,15 @@ The goal is complete only when all are true:
    runtimes pass clean-machine installer and cold-start checks.
 8. The repository contains intended code/font/dependency licenses and notices, security guidance,
    no committed secrets, content-redacted logs, and no unapproved/copy-risk surface.
-9. The stable hackathon demo/submission material claims only the last verified candidate; hosted
-   deployment is optional and not a completion requirement for this local-first goal.
+9. Release/demo/submission material claims only the verified candidate; hosted deployment is optional
+   and not a completion requirement for this local-first goal.
 10. Final sign-off reports exact commands/results, migration and operational notes, acceptance
     evidence, known limitations inside the contract, and confirmation that no excluded feature was
     silently added.
+11. A01–A09 have the acceptance evidence mapped by U00–U10: nondestructive startup, patched
+    dependencies, transaction/quota correctness, browser renewal, bounded provider execution, and
+    authenticated/recoverable supervised desktop operation. Browser cookie-loss recovery and legacy
+    desktop recovery without prior ownership proof remain explicitly unsupported.
 
 Near-complete, screenshot-only, provider-only, or “works on my machine” is not complete.
 
