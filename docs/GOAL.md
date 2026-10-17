@@ -5,7 +5,7 @@ truth, not a progress log. Feature authority remains in `docs/SCOPE.md`.
 
 ## Goal objective
 
-> Implement and audit the Omplish Local-first Full Release exactly as specified by the repository's current-truth contracts. The user-authorized Ameth Companion package takes priority before remaining P0–P8 work: it adds optional deterministic progression, private transparent summaries, and non-persistent companion chat without gating manual workflows or weakening review-before-apply AI. Then continue the approved Editorial Focus, local core, recurrence, habits, Focus, PWA, reminders, portability, and Electron work. Follow `docs/IMPLEMENTATION_PLAN.md`, keep every provider optional, preserve canonical task/time data and review-before-apply AI, and pass `docs/QUALITY.md`.
+> Implement and audit the Omplish Local-first Full Release with conversation as the primary interface and editable task/planning views as canonical state and execution evidence. Execute explicit reversible instructions through the server allowlist; require confirmation for inferred plans, bulk changes, and destructive actions, without enabling unsupported tools. Retain conversation history with delete/export controls and separate approved memory. Follow the AIF and U checkpoint dependencies in `docs/IMPLEMENTATION_PLAN.md`, preserve all committed Companion and P0–P8 capabilities, keep providers optional, and pass `docs/QUALITY.md`. Browser cookie renewal and enrolled desktop recovery remain required; browser cookie-loss recovery remains deferred.
 
 ## Required reading order
 
@@ -30,10 +30,12 @@ Before the first change in each package, read:
 - “Local-first” means local/self-host completion without a hosted prerequisite. The authorized
   Electron target adds local desktop installation, but it does not authorize offline synchronization,
   mutation queues, or cross-device sync.
-- P0 changes presentation only. Its five-screen proof must receive explicit user screenshot approval
-  before broad restyling or feature UI begins.
-- Preserve the stable deadline candidate while new packages are incomplete. No partial package is
-  merged into the release candidate merely because the submission deadline is close.
+- P0 reconciles the approved Editorial Focus foundation and five-screen evidence, then closes
+  remaining acceptance gaps. Existing approval covers unchanged design; changed proofs retain
+  explicit screenshot gates. AIF requires its own conversational composition approval before
+  primary-interface rollout; earlier route approval does not imply it.
+- Preserve existing data/work while packages are incomplete. The audited checkout is not a verified
+  green fallback; no partial package becomes a release candidate because a deadline is close.
 - Keep one TypeScript repository, one Next.js application, one PostgreSQL database, and one pg-boss
   worker entry point. Do not add a service or framework when the approved stack covers the need.
 - Route/page files stay thin; application/domain rules and ownership checks remain in the owning
@@ -44,8 +46,12 @@ Before the first change in each package, read:
   local startup paths remain usable without either. Settings may manage one encrypted profile-owned
   OpenAI key without exposing it to the browser, and Reset app must remove the current profile and
   restart through direct launch.
-- AI produces a typed proposal only; deterministic code validates/schedules it and only explicit
-  review/apply can write. Push jobs reload current state before sending and contain opaque IDs only.
+- AI produces typed requests; deterministic application code authorizes, validates, and commits
+  allowlisted explicit reversible commands or exactly confirmed proposals. Model text cannot grant
+  authority or prove success. Persisted receipts and version-checked Undo are required for direct
+  execution. Push jobs reload current state before sending and contain opaque IDs only.
+- Retain owner-controlled conversation history with delete/export; keep approved memory separate.
+  Bound inference context and fence stale runs when deleting source conversation/memory state.
 - Offline support is honest: cache public/static shell assets only, keep already rendered data
   read-only, and never queue or claim a domain mutation while disconnected.
 - Electron desktop support is honest: the local app may mutate its local PostgreSQL database while
@@ -59,16 +65,19 @@ Before the first change in each package, read:
 
 - Follow the dependency graph and package ownership in `docs/IMPLEMENTATION_PLAN.md`; route-based
   parallelism cannot split a shared domain or schema invariant across agents.
+  U00 and AIF1 are independent starts; U01 follows U00. AIF2 is a private command-core package;
+  direct conversational execution waits for AIF4's real lifecycle integration and applicable gates.
 - One integration owner serializes shared tokens, dependency/lockfile changes, schema aggregation,
   SQL migrations, worker composition, root routes, and full browser/database/Docker gates.
 - A work package is complete only when code, migration, tests, docs, evidence, and its audit gate are
   complete. A failing or skipped required check is unfinished work.
-- At every visual approval gate, stop the dependent rollout. Independent read-only audits or
-  explicitly listed non-visual stabilization may continue without treating silence as approval.
+- At every visual approval gate, stop the dependent rollout. Independent authorized hardening,
+  evaluation, or non-visual stabilization may continue without treating silence as approval.
 - Report evidence and options when a committed item is at risk. Do not silently cut acceptance,
   loosen a test, or substitute a later feature.
-- Keep the hackathon submission path safe: if a new package is not green and approved by its cutoff,
-  use the last green candidate rather than rush an unverified merge.
+- Historical hackathon dates do not relax current acceptance. Automatic unsigned prereleases must
+  consume the same source/artifact bytes that passed required verification; production signing
+  requirements remain separate. Local verification does not itself authorize a remote push/publish.
 
 ## Completion definition
 
@@ -76,7 +85,8 @@ The goal is complete only when all are true:
 
 1. Every active capability and acceptance criterion in `docs/SCOPE.md` has automated evidence, a
    named manual audit, or both.
-2. P0 proof and final migrated screenshots have explicit user approval.
+2. P0 baseline approval and current evidence are reconciled; changed proof/final screenshots have
+   explicit user approval. Existing approval does not substitute for current quality checks.
 3. `pnpm verify` plus clean/upgrade migration, local production Compose, service-worker, worker, and
    provider-degraded gates in `docs/QUALITY.md` pass.
 4. Cross-user authorization denial covers every task/recurrence/occurrence, habit/log, Focus,
@@ -90,11 +100,22 @@ The goal is complete only when all are true:
    runtimes pass clean-machine installer and cold-start checks.
 8. The repository contains intended code/font/dependency licenses and notices, security guidance,
    no committed secrets, content-redacted logs, and no unapproved/copy-risk surface.
-9. The stable hackathon demo/submission material claims only the last verified candidate; hosted
-   deployment is optional and not a completion requirement for this local-first goal.
+9. Release/demo/submission material claims only the verified candidate; hosted deployment is optional
+   and not a completion requirement for this local-first goal.
 10. Final sign-off reports exact commands/results, migration and operational notes, acceptance
     evidence, known limitations inside the contract, and confirmation that no excluded feature was
     silently added.
+11. A01–A09 have the acceptance evidence mapped by U00–U10: nondestructive startup, patched
+    dependencies, transaction/quota correctness, browser renewal, bounded provider execution, and
+    authenticated/recoverable supervised desktop operation. Browser cookie-loss recovery and legacy
+    desktop recovery without prior ownership proof remain explicitly unsupported.
+12. AIF1–AIF5 and G11 prove conversational instruction/refinement, policy-correct execution and
+    confirmation, committed receipts, safe Undo, persistent-history export/deletion, bounded context,
+    restart/replay safety, and the approved primary-interface proof. Existing manual paths remain usable.
+    Desktop sign-off covers the integrated AIF/N01 candidate SHA and exact artifacts through fresh
+    U10 gates and native G11, not a prior hardening-only binary.
+13. N01 completes project-owned OpenTask/opentask naming replacement with Omplish/omplish before
+    U10, with reviewed legacy exceptions and verified data, identity, and export continuity.
 
 Near-complete, screenshot-only, provider-only, or “works on my machine” is not complete.
 

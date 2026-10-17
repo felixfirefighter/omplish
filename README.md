@@ -1,8 +1,16 @@
 # Omplish
+
 <img width="400" height="267" alt="A4 - 1" src="https://github.com/user-attachments/assets/bf0ca51f-dcf6-4392-8f67-a57a80eb4f00" />
 
+Omplish is a self-hostable, open-source personal planning workspace being refined around an AI-first
+interaction model: describe an outcome, let the assistant manage supported task/planning changes,
+and inspect the resulting records. Task and calendar views remain editable and work without AI.
 
-Omplish is a self-hostable, open-source personal planning app for tasks, calendar planning, and an optional review-before-apply assistant. Core workflows remain useful without an AI key or paid feature tier.
+The selected direction includes controlled execution and persistent conversation history. These are
+implementation targets, not shipped capabilities; the current implementation still uses the optional
+proposal/Apply flow described below. See [product direction](docs/PRODUCT.md),
+[research and framework decision](docs/research/AI_FIRST_REPOSITIONING.md), and
+[delivery plan](docs/IMPLEMENTATION_PLAN.md).
 
 ## Quick start
 
@@ -18,9 +26,12 @@ pnpm db:seed
 pnpm dev
 ```
 
-`pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. Open `http://127.0.0.1:3000`; Omplish launches directly and asks for a profile username, which is cached locally before it opens a private workspace for that browser. The current green candidate does not require a background worker; `pnpm worker` remains a zero-job architecture smoke until the reminder package activates jobs.
+`pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. Open `http://127.0.0.1:3000`; Omplish launches directly and asks for a profile username, which is cached locally before it opens a private workspace for that browser. The current implementation does not require a background worker; `pnpm worker` remains a zero-job architecture smoke until the reminder package activates jobs.
 
-## Current green candidate
+## Implemented core and verification limits
+
+The architecture audit identified unresolved release blockers. Implemented behavior below is not a
+claim of a green candidate; see [audit evidence](docs/research/ARCHITECTURE_AUDIT.md).
 
 The Deadline-safe Core includes:
 
@@ -42,9 +53,15 @@ exact target and [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) for 
 
 Omplish was developed through an iterative collaboration between the project owner and Codex. The owner defined the product direction and approved the key product and design decisions; Codex supported research synthesis, scope-locked specifications, architecture, modular implementation, and audits for authorization, timezones, accessibility, responsive behavior, dependencies, and release readiness.
 
-Codex also helped preserve the product's non-negotiable engineering boundaries: manual workflows remain usable without AI, task and schedule facts have one canonical representation, and AI cannot change data without user review.
+Codex also helped preserve manual fallback, canonical task/schedule facts, and validated application
+writes. The initial planner required review for every change; the selected AIF direction introduces
+the explicit-reversible versus confirmed-proposal policy in the assistant contract.
 
-GPT-5.6 is used only for the optional, server-side planning proposal. It turns a brain dump and selected task context into a schema-validated suggestion; deterministic application code retains control of scheduling, ownership, conflicts, and atomic apply. The model receives minimal context with `store: false`, never receives browser-side credentials, and cannot write task data directly. Refusal, stale-data, no-write-before-apply, and idempotency paths are covered by tests.
+Current GPT-5.6 calls support planning proposals, Companion/check-in responses, and prompt analysis.
+The planner turns selected context into a schema-validated suggestion; deterministic code controls
+scheduling, ownership, conflicts, and atomic apply. Requests use minimal context and `store: false`;
+the model has no direct database access. The AIF conversation/harness and receipt/Undo paths remain
+planned work, with their own verification gates.
 
 ## Verification and deployment
 

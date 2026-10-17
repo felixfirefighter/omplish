@@ -80,10 +80,13 @@ evidence separate from presentation-clean comparison captures.
 2. Contextually quick-add and inspect a task.
 3. Add priority, Markdown, tag, checklist item, subtask, organization, and schedule.
 4. Reorder through keyboard-accessible controls; search; complete/undo; cancel/restore.
-5. Clear the internal browser session; protected data and export require the direct-launch bootstrap.
+5. Verify active-use cookie and DB-session renewal. After clearing browser credentials, protected
+   data/export remain denied; a new workspace is not recovery of the previous actor. Desktop recovery
+   is verified separately in G10.
 
-Forced: invalid input, stale update, atomic create/schedule failure, network/offline write, and User B
-guessing User A identifiers.
+Forced: invalid input, stale update, atomic create/schedule failure, network/offline write, User B
+guessing User A identifiers, failed launch → Retry, missing username with valid session, legacy
+bootstrap calls, and unreadable optional provider settings. Ordinary retries preserve existing data.
 
 ### G2 — Plan across time
 
@@ -113,7 +116,9 @@ proposal, duplicate apply, and concurrent task change. Every pre-apply failure w
 1. Reset isolated demo twice without shared state.
 2. Export and validate the current versioned document.
 3. Lose connectivity in an open page; rendered data stays visible/read-only and writes are disabled.
-4. Clear the internal browser session; private routes/export require the direct-launch bootstrap.
+4. Clear the internal browser session; private routes/export cannot expose the previous actor's data
+   without ownership proof. Browser cookie-loss recovery is deferred; creation cannot delete the old
+   workspace or be presented as its recovery.
 5. Repeat local health, migration, demo, and critical paths in a clean browser.
 
 Forced: export failure, second-user fixture, database unavailable, missing providers, and duplicate
@@ -186,20 +191,74 @@ Forced: cache update/removal, no authenticated content in Cache Storage, unsuppo
    app and verify PostgreSQL/Next child processes terminate cleanly.
 5. Inspect the unpacked package for runtime binaries, source/version checksums, license notices,
    signing/notarization metadata, and absence of secrets or development services.
+   Verify the packaged Electron entry's complete runtime import graph, including extracted modules;
+   a smoke that imports compiled files from the checkout is not package-completeness evidence.
 6. Run `pnpm electron:runtime-smoke -- --app-dir <unpacked-app>` in the release environment, then run
    `pnpm electron:smoke -- --app-dir <unpacked-app>` from the interactive native desktop session and
-   retain both JSON results plus the platform signing verification output.
+   retain both JSON results. Signed distribution also requires platform signing verification output;
+   unsigned test/prerelease evidence must explicitly record unsigned status.
+7. Enroll the desktop actor, expire/clear its cookies, change the port, and restart/upgrade; the same
+   actor/task IDs must survive through OS-protected proof. Deny forged/foreign/revoked proof and
+   untrusted enrollment; legacy profiles with no session or enrolled proof retain data without actor
+   guessing. Reset cannot resurrect a deleted actor.
+8. Verify fresh and legacy authenticated DB access, scoped migration/runtime roles, wrong/empty
+   password and second-OS-user denial, interruption-safe upgrade, and full stopped-fixture restore.
+   Test post-ready child failure and quit during startup; confirm owned processes actually exit.
 
 Forced: missing runtime artifact, occupied loopback port, malformed local database, migration failure,
 crash during startup/shutdown, second-instance launch, read-only install directory, no OpenAI key,
 offline AI request, and attempted remote navigation from the renderer.
 
+### G11 — Conversational planning and controlled execution
+
+1. Start/reopen an owned conversation and request a day plan using current task context. Show
+   understood constraints and an exact diff; inferred/bulk work waits for confirmation.
+2. Confirm the specific plan; receive a committed receipt and inspect the same records in task/
+   Today/Calendar views. Refinement never creates a second task representation.
+3. Give an explicit allowed single-task correction. It executes once when reversible and unambiguous;
+   inspect its receipt and Undo. Later edits make conflicting Undo fail safely.
+4. Refresh/restart or lose the response after commit. Reconcile the original operation and display its
+   result without replaying changes. A failed graph checkpoint cannot cause duplicate effects.
+   Force provider refusal, timeout, or invalid final narration after a tool commits: the receipt
+   remains applied even if the reply fails. A pre-command interpretation failure has no domain effect.
+5. Continue with a long synthetic history; verify bounded prompt/results/calls, current-state reload,
+   and relevant approved memory. Summary text cannot grant permission or invent current state.
+6. Export history/visible receipts and approved memory. Delete the conversation during a pending run;
+   derived content/checkpoints are purged and fenced work cannot recreate content or commit afterward.
+   Disclose that tasks and separately approved memories remain, but associated receipts and assistant
+   Undo become unavailable; deleted-thread Undo is denied. Edit, delete, and FIFO-evict saved memory,
+   then resume/recompact: affected context is invalidated and old history cannot silently reactivate
+   the removed/replaced saved preference. Retained transcript text has its separately disclosed life.
+7. Disable the provider/network and complete the same task workflow manually. No queued/accepted
+   instruction or successful effect is implied without a real server outcome.
+
+Forced: ambiguous “yes”, multi-target command split across tool calls, unsupported destructive action,
+prompt injection in retrieved text/history/memory/tools, foreign thread/record IDs, altered idempotency
+payload, concurrent turns, stale schedule/task state, expired approval, cancellation and delete/commit
+races, receipt failure, checkpoint-write-after-delete, provider timeout, quota exhaustion, and export
+snapshot races. Exercise current production composition and real PostgreSQL for persistence effects.
+
+Native G11 is required before distributing the conversational desktop package. AIF5 joins AIF4/N01
+on the exact candidate and repeats U10's canonical/native artifact gates; an earlier U10 pass is
+not certification of changed binaries. Later feature packages follow the same exact-artifact rule.
+Live provider quality measurements are reported separately from deterministic/mocked-provider
+acceptance. AIF1 freezes shared workloads, model/settings, repeated-run methods, semantic expectations,
+and numeric resource/performance budgets before comparison. Deterministic acceptance requires zero
+unauthorized writes, duplicate effects, and false success; mocked providers do not prove live quality.
+
 ## Package acceptance evidence
 
 | Package | Required evidence |
 |---|---|
+| AIF1 | frozen authority/deny fixtures, schema and resource decisions, repeatable SDK/harness comparison with preset criteria; no inferred production safety from a spike |
+| AIF2 | private command/receipt/Undo core, actual domain writers and real DB, controlled lifecycle-interface tests; no direct-AI activation or claim of real thread/checkpoint safety |
+| AIF3 | approved conversational composition with deletion/receipt/Undo disclosure, design/a11y and deterministic browser evidence |
+| AIF4 | real production thread/run/checkpoint integration, transactional fencing, history/context/export/delete/replay and post-commit reply failure tests, G11 before direct-AI activation |
+| AIF5 | complete product-loop comparison, full web gates, combined AIF/N01 exact-SHA U10 artifact gates and native G11 before desktop sign-off |
+| U00–U10 | A01–A09 mapped regressions, real-DB transaction/quota/admission tests, browser renewal, native auth/recovery/lifecycle/upgrade/restore evidence, exact-SHA artifact gates, and `pnpm verify`; browser recovery explicitly deferred |
+| N01 | identifier/exception inventory, clean and existing-data migration/restart, identity/export continuity, final naming and artifact checks |
 | LF00 | conflict-free contracts + existing-core baseline |
-| P0 | approved proof/final screenshots + design/a11y/behavior non-regression |
+| P0 | reconciled baseline approval, approved changed proofs, current design/a11y/behavior non-regression; no automatic remigration |
 | P1 | G1–G4 + atomicity/freshness/origin/provider-degraded tests |
 | P2 | G5 + recurrence migration/time/range/ownership suites |
 | P3 | G6 + habit migration/log/streak/time/ownership suites |
@@ -213,9 +272,15 @@ offline AI request, and attempted remote navigation from the renderer.
 
 ### Visual-proof gate
 
-P0 broad rollout is blocked until the user approves deterministic App launch, Today, Calendar, task
-detail, and populated AI Review evidence. Required light captures are 1440 and 390; include
-representative dark and 768/320 boundary evidence. A requested revision is work, not approval.
+P0 preserves the approved Editorial Focus baseline and reconciles App launch, Today, Calendar, task
+detail, and populated inferred-plan review evidence. Reuse existing approval for unchanged design;
+new/changed proofs require explicit screenshot approval before dependent rollout. Required light
+captures are 1440 and 390, with representative dark and 768/320 boundary evidence. Missing current
+checks remain open; recaptured screenshots are not implicitly approved. A requested revision is work.
+
+AIF's primary conversation composition separately requires explicit approval of history, direct
+command/receipt/Undo, inferred-plan confirmation, deletion, conflict/unknown-outcome, and provider-
+absent proofs. Retain the approved foundation; earlier route approval is not approval of this layout.
 
 ### Stable submission-candidate gate
 
@@ -278,6 +343,8 @@ existence disclosure.
 - Logs/job/export/cache contain no user content, emails, sessions, OpenAI/VAPID keys, push endpoints,
   subscription auth, or provider payloads.
 - Run secret, production dependency, font/asset, and license inventory gates.
+- Audit bundled Electron/Node/PostgreSQL and image OS packages separately from npm. Desktop runtime
+  credentials and recovery proof require native OS-permission/ACL and secret-exposure evidence.
 
 Failure: exploitable input/output, content/secret exposure, unsafe private cache, or applicable
 unresolved high/critical advisory/license conflict.
@@ -294,9 +361,16 @@ unbounded expansion, or stored derived counter.
 ### 7. AI safety and correctness
 
 - Reprove Structured Output/refusal, minimal context/`store:false`, allowed actions, diff/uncertainty/
-  overflow, ownership/version/idempotency/atomic apply, and zero pre-apply writes.
+  overflow, ownership/version/idempotency/atomic execution, and zero unconfirmed inferred/bulk writes.
+- Direct commands require authenticated explicit intent, the server allowlist, tested compensation,
+  and committed receipts. Retained transcripts/checkpoints cannot grant authority; every resumed
+  command rechecks current state. G11 proves unknown-outcome reconciliation and deletion fencing.
 - Recurring occurrences may be bounded context but AI cannot create/edit recurrence, habits, Focus, or
   reminders in this release.
+- Prove shared deployment/actor admission across all provider operations and processes, including
+  rejected-call zero dispatch, actor churn, cancellation, crash/lease expiry, and manual fallback.
+  Use database time and bounded attempt/lease policy; distinguish local cancellation from upstream
+  work actually stopping and never imply an exact currency budget from call limits.
 
 Failure: autonomous/hidden write, illegal schedule/action, stale overwrite, or content oversharing.
 
@@ -328,6 +402,9 @@ serious/critical axe issue, or design-contract mismatch.
 - Follow README from a fresh clone through PostgreSQL, migrations, seed readiness, web, active worker,
   demo, golden paths, export, production build/Compose, and provider-degraded use.
 - Verify video/screenshots/README describe the same release commit and expose no secrets/personal data.
+- Automatic unsigned prereleases must wait for canonical and declared native gates for the same
+  immutable source SHA and tested artifact checksums. Failed, cancelled, skipped, or missing required
+  evidence blocks publication. Signed/notarized production distribution keeps its separate gate.
 
 Failure: corruption, duplicate effective write/delivery, hidden setup step, unhealthy process,
 unreproducible local demo, or unverified public claim.
@@ -345,8 +422,8 @@ Do not downgrade because time is short. A cut requires the five-part user-author
 
 ## Final sign-off
 
-The auditor reports release commit/environment, exact commands/results, LF00 and P0–P8 evidence,
-G1–G10 at required widths, visual approvals, migration/worker/PWA/provider smokes, all ten audit
+The auditor reports release commit/environment, exact commands/results, U/AIF/LF00 and P0–P8 evidence,
+G1–G11 at required widths, visual approvals, migration/worker/PWA/provider smokes, all ten audit
 results, dependency/font/asset licenses, and contract-permitted limitations.
 
 Sign-off is denied for any blocker/critical defect, failed required command, unmapped acceptance,

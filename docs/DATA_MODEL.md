@@ -152,8 +152,9 @@ overrides the server `OPENAI_API_KEY`; removing the row restores that fallback.
 proactive-message preference, communication style, schema/version, and timestamps. `companion_xp_events`
 is an append-only user-scoped award ledger with opaque source key, action type, positive bounded XP,
 local date, and unique `(user_id, action_type, source_key)` idempotency. `companion_behavior_summaries`
-holds one replaceable versioned JSONB aggregate summary and its bounded observation window. Raw chat,
-task text snapshots, model traces, and psychological inferences are never stored.
+holds one replaceable versioned JSONB aggregate summary and its bounded observation window. This
+Companion store contains no raw chat, task text snapshots, model traces, or psychological inferences;
+assistant-owned AIF conversations/evidence have their own lifecycle below.
 
 `companion_memories` contains only explicit, user-approved bounded memory cards. It is not a chat log;
 the application enforces a 30 MiB UTF-8 user quota and evicts oldest cards before accepting a new one.
@@ -166,8 +167,9 @@ reviewable Ameth-generated title/description, optimistic version, archive state,
 `saved_prompts`. Prompt tags never reuse task tags, and
 analysis never saves automatically: the user edits/reviews metadata before creation.
 
-The private export envelope is schema version 2. It includes companion profile, XP ledger, summary,
-approved memory cards, and saved prompts/tags, but never raw chat transcripts or OpenAI credentials.
+The current private export envelope is schema version 2. It includes companion profile, XP ledger,
+summary, approved memory cards, and saved prompts/tags, without raw transcripts or OpenAI credentials.
+AIF conversation persistence requires a new reviewed export version; do not reinterpret version 2.
 
 ### `list_folders` — tasks
 
@@ -394,7 +396,32 @@ focus totals and export.
 - `model`, `prompt_version`, `idempotency_key`
 - `created_at`, `expires_at`, nullable `applied_at`
 
-Do not persist the raw brain dump by default. The proposal contains only the reviewable structured diff. Apply is one transaction and status/idempotency key make retries safe.
+The proposal contains only the structured diff; raw input belongs to the retained AIF conversation
+when that feature ships and is not duplicated here. Confirmed Apply is one transaction. AIF adds
+effective selection/result receipts and shared command idempotency; the current status-only result
+does not already supply that evidence.
+
+## AIF persistence design gate
+
+Persistent conversation and controlled execution are authorized capabilities; their physical schemas
+are not yet specified or migrated. AIF1 must freeze exact table dictionaries, constraints, lifetimes,
+serialization, export version, and migration/forward-fix policy before adding tables. Owning concepts:
+
+- assistant: conversations/messages, bounded run state and exact confirmations, commands and visible
+  receipts, and minimal operational deduplication after content deletion;
+- companion: existing approved memory; do not duplicate it in a framework long-term store;
+- tasks/planning: existing canonical task/schedule facts; agent internal plans are not task records.
+
+Receipts are history, not a second current task representation. Store only needed effective changes
+and Undo evidence; content follows conversation deletion, while bounded opaque operation state may
+prevent replay. Thread deletion fences active writes before purging all derived snapshots/checkpoints.
+See `docs/modules/assistant.md` for the authoritative lifecycle and privacy policy.
+
+Framework checkpoint JSONB/binary tables are not automatically approved by adopting an agent library.
+Any necessary operational-storage exception must name exact tables/serialization/version compatibility,
+actor access, grants, retention, migrations, and deletion semantics here and in the architecture audit.
+No `setup()` DDL at ordinary application startup; no generic JSON/EAV agent data store. Existing
+JSONB whitelist rules remain in force until that explicit review.
 
 ## Required indexes
 

@@ -4,32 +4,62 @@ This is the canonical dependency and delivery plan for the active release in `do
 Verification lives in `docs/QUALITY.md`. It replaces the completed/obsolete B0–B7 hackathon build
 sequence; Git retains that history.
 
-## Deadline and candidate-safety contract
+## Candidate-safety contract
 
-- Official hackathon deadline: **2026-07-22 08:00 GMT+8**.
-- The last fully green Deadline-safe Core remains the submission fallback while this plan runs on an
-  isolated branch/worktree.
-- A package may replace that fallback only after its complete gate passes. Screenshots, elapsed time,
-  or a partially working feature are not merge criteria.
-- P0 visual proof requires explicit user approval. If approval is pending, agents may perform
-  read-only audits or the specifically independent P1 diagnostic work; silence never authorizes the
-  broad design rollout.
-- If no new package is fully green before submission preparation must begin, ship/test/record the
-  stable core rather than a mixed design or partial feature.
+- Urgent hardening U00–U10 takes priority over remaining A0 and P0–P8 work. It repairs existing
+  commitments; it does not authorize later-roadmap features or broad restyling.
+- The AI-first AIF contracts and bounded harness evaluation precede new feature expansion. AIF
+  production execution waits for U00–U06; desktop distribution also waits for U07–U10. Existing
+  Companion/P0–P8 capabilities remain committed, with their interaction work reconciled to AIF.
+  U00 starts without AIF1; U01 follows U00. Independent AIF1 evaluation must not delay these repairs.
+- The [architecture audit](research/ARCHITECTURE_AUDIT.md) records the inspected source, findings,
+  and validation limits. Its dependency audit failed; the audited checkout is not a fully green
+  release candidate. Preserve existing work and record the exact baseline before implementation.
+- A package becomes a candidate only after its complete gate passes. Screenshots, elapsed time,
+  or a partially working feature are not merge criteria. A focused repair passing its regression
+  tests does not erase an unresolved full-gate failure.
+- Preserve the approved Editorial Focus baseline. P0 reconciles its evidence and remaining gaps;
+  changed proofs and AIF's new composition retain explicit visual approval gates. Pending approval
+  blocks the dependent visual rollout, not urgent hardening or independent evaluation.
+- Preserve the documented automatic unsigned-prerelease policy, but fail closed unless verification
+  and platform gates cover the exact source and artifact bytes being published. Editing the workflow
+  does not itself authorize a push or publication. Signed production distribution remains a separate
+  gate under `docs/QUALITY.md` and `docs/DEPLOYMENT.md`.
+- Historical hackathon dates belong in `docs/HACKATHON.md`; they are not current delivery deadlines.
+  Never fall back to an unverified candidate merely to meet a date.
 
-The full plan is much larger than the remaining hackathon window. Estimated implementation is
-**176–272 serial engineering hours**, or roughly **88–125 elapsed hours** with four carefully
-partitioned agents, excluding user-approval and external-provider latency. Overnight work can make
-meaningful progress but cannot make this entire contract deadline-safe. No estimate weakens a gate.
+The urgent estimates below are planning ranges, not delivery promises. Re-estimate after U02 and the
+U08 legacy-migration spike; native test-host access and signing/release prerequisites are separate
+from engineering time. Existing P0–P8 estimates exclude urgent hardening and must be re-baselined
+against implemented acceptance evidence before those packages resume.
+The prior 90–170-hour urgent estimate does not include AIF. AIF1 must re-estimate the added history,
+receipts/Undo, context, and UI work after its compatibility/persistence experiment; do not add an
+unmeasured “LangChain integration” estimate or retain the old delivery date unchanged.
+N01 naming migration is also additional effort; estimate it after the identifier and existing-data
+inventory. Its integration must finish before U10 verifies the renamed candidate.
+P0's original migration estimate is superseded by an evidence inventory; estimate only outstanding
+acceptance and justified repairs, without charging for reinstalling an already-approved foundation.
 
 ## Release dependency graph
 
 ```mermaid
 flowchart LR
-    LF00["LF00: activate contracts and baseline"] --> P0A["P0.1: design foundation and proof"]
-    P0A --> APPROVAL["Explicit visual approval"]
-    APPROVAL --> P0B["P0.2: full visual migration"]
-    P0B --> P0C["P0.3: design audit/freeze"]
+    UCORE["U00–U06: core safety"] --> AIF2["AIF2: command core, receipts and Undo"]
+    AIF1["AIF1: contracts, harness and persistence evaluation"] --> AIF2
+    AIF1 --> AIF3["AIF3: conversational proof + explicit visual approval"]
+    AIF2 --> AIF4["AIF4: bounded persistent conversation"]
+    AIF3 --> AIF4
+    AIF4 --> AIF5["AIF5: end-to-end evidence and release review"]
+    UCORE --> UDESKTOP["U07–U09: desktop safety and recovery"]
+    UDESKTOP --> N01["N01: complete Omplish naming migration"]
+    N01 --> U10["U10: native and exact-artifact release verification"]
+    U10 --> AIF5
+    AIF5 --> A0["Remaining A0 acceptance"]
+    A0 --> LF00["LF00: reconcile contracts and baseline"]
+    LF00 --> P0A["P0.1: baseline and evidence reconciliation"]
+    P0A --> APPROVAL["Retain baseline approval; approve changed proof"]
+    APPROVAL --> P0B["P0.2: remaining visual gaps"]
+    P0B --> P0C["P0.3: regression and acceptance audit"]
     P0C --> P1["P1: local-core stabilization"]
     P1 --> P2["P2: recurrence"]
     P1 --> P3["P3: habits"]
@@ -45,15 +75,620 @@ flowchart LR
     P7 --> P8["P8: Electron desktop local runtime"]
 ```
 
+The graph shows package closure dependencies. AIF1 and U00 are independent starting points; the
+U table below owns checkpoint order. AIF5's web checks may run after AIF4 while native verification
+is pending. Desktop sign-off joins AIF4 and N01 on the final candidate and reruns U10's artifact
+gates plus native G11; an earlier hardening-only U10 pass cannot certify changed AIF binaries.
+
+## AIF — AI-first interaction and execution
+
+The selected product policy is recorded in `docs/SCOPE.md` and `docs/modules/assistant.md`:
+conversation primary, explicit reversible commands eligible for direct execution, inferred/bulk/
+destructive actions requiring confirmation, persistent owner-controlled history, and separately
+approved durable memory. The initial tool set stays create/update/prioritize/schedule; approval
+does not enable unsupported tools. Preserve manual paths and all remaining release commitments.
+
+The first vertical slice is **“plan tomorrow, then correct one task”**: conversation → constraints/
+diff → confirmed inferred plan → committed receipt and live views → explicit single-task correction
+→ safe Undo. It exercises the product claim before adding more tools or background autonomy.
+
+### AIF1 — Freeze interfaces and evaluate the harness
+
+- [ ] AIF1.1 Freeze the command policy, exact confirmation binding, history/memory/delete/export
+  behavior, receipt fields, thread concurrency/cancellation semantics, and interfaces owned by
+  assistant versus tasks/planning/companion. Review the conflict/deny cases before happy paths.
+  Define instruction-to-target/field binding with quoted, negated, inferred, ambiguous, stale, and
+  injected-input fixtures; model confidence is not authority. Freeze concrete context/storage/run
+  limits, exact persistence dictionaries, lifetimes, and export version before dependent code.
+- [ ] AIF1.2 Compare the direct SDK with one TypeScript `createAgent` harness using isolated synthetic
+  fixtures. Evaluate tool selection/refinement, bounded context, replay/interrupt behavior, model
+  request invariants, latency/tokens, connection usage, retained bytes, and shipped-size/dependency
+  impact. No Deep Agents, general shell/filesystem tools, vector service, or multiagent runtime.
+  Freeze shared workloads, model/settings, repeat counts, semantic expectations, and numeric
+  latency/token/storage/size budgets before comparison. Require zero unauthorized/duplicate writes
+  and false success in deterministic fixtures; report live interpretation quality separately.
+- [ ] AIF1.3 Inspect exact candidate versions/licenses/advisories and PostgreSQL saver implementation.
+  Review whether checkpoint tables require an explicit data-model exception, managed migrations,
+  serialization compatibility, restricted grants, bounded connection pool, and deletion fencing.
+  Do not use startup DDL or assume `thread_id` authorizes anything.
+- [ ] AIF1.4 Select the simplest passing harness, record the decision and exact stack/data requirements,
+  and re-estimate remaining effort. Stop framework adoption if it weakens provider policy, domain
+  idempotency, tenancy, or deletion. The direct SDK remains the comparator, not a second production
+  orchestration path to maintain indefinitely.
+
+Gate: reviewed interfaces and repeatable comparison evidence; no benchmark or framework capability
+claim without its fixture/result. AIF1 can run without native target access and cannot weaken U gates.
+
+### AIF2 — Deterministic execution, committed receipts, and safe Undo
+
+Depends on U00–U06 and AIF1. Reuse the existing task/planning validation and proposal applier.
+This package builds the private execution core, not a publicly enabled conversational command path.
+Thread/run persistence, checkpoint integration, and source-deletion fencing ship in AIF4. Keep the
+current reviewed proposal flow until real lifecycle integration passes; no permissive runtime guard
+or test adapter may enable direct AI writes.
+
+- [ ] AIF2.1 Build the internal user-command path alongside confirmed proposals, sharing deterministic
+  application execution. Bind actor/current instruction, normalized allowed targets/fields, expected
+  versions, stable operation identity, and the AIF1 lifecycle-guard interface. Enforce one-task direct scope
+  across the whole turn; model confidence or tool-call count is not authorization.
+- [ ] AIF2.2 Add exact approval binding for inferred/bulk work; edits invalidate approval and an
+  ambiguous “yes” cannot approve a plan. Recheck state/permissions/confirmation inside the mutation
+  transaction through the lifecycle-guard interface that AIF4 will bind to real run/deletion state,
+  including concurrent calendar changes and expired/revoked approval. Keep provider work outside SQL.
+- [ ] AIF2.3 Review dictionary/SQL migrations for assistant-owned effective commands, confirmations,
+  and receipts; do not add task state replicas or generic JSON. Commit result evidence with each
+  mutation. Identical retries return the original receipt; changed payload reuse conflicts.
+- [ ] AIF2.4 Implement version-checked compensation for each direct action before enabling it. Test
+  subsequent edits/dependent records, conflicting schedules, and create-then-Undo without granting
+  a general AI delete tool. If compensation is unavailable, require confirmation for that operation.
+- [ ] AIF2.5 Prove cross-user denial, untrusted authority rejection, duplicate delivery, altered input,
+  receipt rollback, commit-before-response failure, and safe Undo with real PostgreSQL and the actual
+  task/planning writers. Exercise guard denial/rollback using controlled test lifecycle inputs;
+  this proves the command interface only. Real thread cancellation/deletion/checkpoint races and
+  post-commit provider/narration failures are AIF4 integration requirements, not AIF2 exit evidence.
+
+Gate: deterministic policy and real-DB evidence; proposed/committed/unknown outcomes stay distinct.
+Receipts establish what committed, not semantic correctness or execution of external tasks. AIF2
+closure does not enable direct AI execution or claim real conversation-lifecycle safety.
+
+### AIF3 — Prove the conversational interaction before rollout
+
+Uses AIF1 contracts and synthetic deterministic results; independent of production agent execution.
+Preserve the approved Editorial Focus foundation and existing P0 approval requirements.
+
+- [ ] AIF3.1 Produce `/plan` conversation proofs for fresh/returning history, explicit command,
+  inferred plan confirmation, receipt/Undo, conflict/unknown outcome, deletion, and provider absence.
+  Keep task/Today/Calendar inspection and direct correction visible; avoid a second Ameth chat silo.
+  Deletion must disclose loss of associated receipts and assistant Undo while committed tasks remain.
+- [ ] AIF3.2 Update routed screen/shell behavior for keyboard/mobile conversation, inline or linked
+  plan diff, accessible progress, focus retention, and history/memory controls. Do not restyle tokens
+  or turn every simple manual action into a mandatory model request.
+- [ ] AIF3.3 Validate 1440/1024/390 and required boundary widths, a11y, reduced motion/themes, and
+  shared design contracts. Obtain explicit screenshot approval before the primary navigation/default
+  launch changes. Approval of the earlier UI does not approve this new composition.
+
+Gate: accepted interaction proof plus deterministic browser/a11y/design evidence. No live “applied”
+claims may be simulated outside clearly identified fixtures/prototype evidence.
+
+### AIF4 — Persistent, bounded conversation using the selected harness
+
+Depends on AIF1/AIF2, approved AIF3, and the corresponding schema/stack gates.
+
+- [ ] AIF4.1 Implement assistant-owned threads/messages and minimal resumable run state with explicit
+  owner queries, bounded pagination/storage admission, managed migrations, and history export/delete
+  in the same package. Retain history until user deletion or a selected policy; never silently evict it.
+- [ ] AIF4.2 Assemble bounded recent turns, lossy summaries, relevant approved memory, and fresh
+  task queries. Use existing search/filters first. Define tested token/result/step/time bounds; charge
+  every model attempt, compaction, and retry through U06. Verify actual provider wire requests.
+- [ ] AIF4.3 Connect the selected narrow harness to allowlisted public application tools; no direct
+  repository access. Serialize/fence concurrent turns and resumptions, renew authorization, preserve
+  receipt identity, and reconcile outcomes after process restart or checkpoint failure.
+  Bind AIF2's lifecycle guard to real owned thread/run state inside command transactions. Prove
+  commit-before-checkpoint and post-commit provider/schema/narration failure preserve the applied
+  receipt without replay or a false no-change result.
+- [ ] AIF4.4 Fence and cancel active runs/approvals before thread deletion, then purge messages,
+  summaries, linked planner-proposal/effective-command/receipt/Undo payloads, thread snapshots/
+  checkpoints/blobs and retrieval copies. Atomically order deletion against command commits and
+  prevent stale domain/checkpoint writes after deletion wins. Preserve committed tasks/separately
+  approved memories with explicit disclosure; retain only bounded content-free replay metadata.
+  Deny deleted-thread Undo. Memory edits, deletion, and FIFO eviction invalidate affected summaries
+  and assembled/resumable context; retained history cannot silently reactivate removed saved memory.
+- [ ] AIF4.5 Integrate one conversation into `/plan` and Ameth entry, then switch accepted default
+  launch from Today. Persist drafts/history honestly, show committed receipts/current-view links,
+  and retain direct manual fallback. Progression never gates core assistant access.
+  Enable direct execution only after real-DB production-composition tests prove thread ownership,
+  cancellation/deletion ordering, checkpoint-write fencing, injection resistance, and all G11 cases.
+
+Gate: G11, persistence/authorization/migration/export/deletion tests, long-history fixtures, actual
+provider-request contract tests, bounded retries/concurrency, and approved responsive UI evidence.
+
+### AIF5 — Validate the product claim and re-baseline the remaining release
+
+- [ ] AIF5.1 Compare the complete vertical slice against the existing manual/planner flow: time and
+  interactions to a correct plan, corrections, wrong/duplicate writes, false success, tokens/cost,
+  latency, retention size, and recovery. Use recorded fixtures for repeatability; distinguish any
+  separately configured live-provider results from deterministic tests.
+- [ ] AIF5.2 Run `pnpm verify`, production Compose, required migration/upgrade and provider-absent
+  gates. Join integrated AIF4 and N01 changes on one candidate SHA; rerun U10's canonical/native
+  artifact gates and native G11 for that SHA before desktop sign-off. Reuse no earlier binary's
+  approval for changed code. Web checks may finish while native gates remain explicitly pending.
+- [ ] AIF5.3 Reconcile remaining A0/P0–P8 interaction tasks with the accepted conversation. Keep every
+  committed recurrence/habit/Focus/PWA/reminder/export/desktop capability; report any proposed cut
+  for explicit scope change rather than silently dropping it. Remove superseded UI assumptions,
+  duplicate conversational paths, dead tools, and unsupported claims.
+
+Gate: verified conversation-to-plan/correction/receipt loop, clear evidence limits, and an updated
+remaining plan. No automatic new tool, background execution, or external integration is enabled.
+
+## U — Urgent architecture remediation
+
+This is one hardening work package with sequential, reviewable checkpoints. Implement one checkpoint
+at a time; use parallel agents for independent review only. Do not repeat already-proven behavior or
+rewrite modules wholesale. Each patch includes its relevant regression, implementation, contract
+updates, and focused verification; demonstrate the regression before fixing it, without committing a
+deliberately failing test in isolation. U10 is the package sign-off, not a substitute for checks during
+each checkpoint. All execution checkboxes below remain open until their evidence exists.
+
+### Order, ownership, and finding coverage
+
+| Order | Checkpoint / audit finding | Primary ownership | Dependencies | Engineering estimate |
+|---|---|---|---|---|
+| U00 | Protect baseline and repair early release guards / A08 | integration, CI/staging | none | 4–8 h |
+| U01 | Nondestructive launch and retry / A01 | identity, task demo port | U00 | 4–8 h |
+| U02 | Patch exposed dependency trees / A02 | integration, dependencies | U01 | 6–12 h |
+| U03 | One transaction per coupled command / A04 | identity, companion, source modules | U02 | 6–10 h |
+| U04 | Atomic 30 MiB memory cap / A07 | companion, identity reset | U03 | 6–10 h |
+| U05 | Browser cookie renewal / A03 browser portion | identity | U01, U02 | 4–8 h |
+| U06 | Shared AI admission limits / A06 | assistant | U02, U03 | 10–18 h |
+| U07 | Desktop process ownership and failure handling / A09 | Electron runtime | U02 | 10–16 h |
+| U08 | Authenticated desktop PostgreSQL, including upgrades / A05 | runtime, migrations | U07 | 16–32 h |
+| U09 | Durable desktop identity / A03 desktop portion | identity, Electron main | U05, U08 | 12–24 h |
+| U10 | Native verification and exact-artifact release gate / A08, final closure | integration | U00–U09, N01 | 12–24 h |
+
+Budget **90–170 engineering hours** before external waiting and unanticipated migration findings.
+These are estimates, not measured throughput. U01 is the first product behavior fix. U00's local
+guards do not wait for a Windows/Intel Mac test host. Native evidence can remain pending while
+independent implementation proceeds, but its checkpoint/finding cannot be marked verified.
+
+### Decisions and scope boundaries
+
+- **Selected by the user:** repair desktop identity recovery and browser cookie renewal; defer
+  browser recovery after expired/lost cookies. A username is never ownership proof. A03 closes only
+  against these supported semantics, with the browser limitation retained in the release notes.
+- Keep the modular monolith, PostgreSQL, existing provider adapters, and Electron runtime. No Redis,
+  service extraction, sync engine, second database, or new dependency is presumed necessary.
+- Normal startup resumes an authenticated actor; destructive demo reset and Reset app are explicit
+  commands. Preserve existing first-create seeding until a separate scope decision changes it.
+- Use required transaction ownership for coupled XP; use a per-user transaction advisory lock for
+  memory mutations. Do not add a persisted memory-byte counter or a generic transaction framework.
+- Use assistant-owned operational admission state, separate from identity's Better Auth limiter.
+  Limits are abuse protection, not billing or a product quota tier.
+- Keep DB credentials, desktop recovery capability, and the existing auth/encryption secret distinct.
+  Preserve the existing `instance-secret` byte-for-byte during this work.
+- Full encryption-key rotation, broad public-auth cleanup/CSP work (A17), read pagination/polling,
+  ranking/export/bundle/image-size optimization (A10–A16), and wider test expansion stay separate.
+  A18 regressions directly needed by A01–A09 are included here. No PostgreSQL major upgrade,
+  product restore/import UI, auto-update, or broad design change is included.
+
+### U00 — Protect the baseline and fail closed on release prerequisites
+
+Files: `.github/workflows/ci.yml`, `.github/workflows/publish-desktop.yml`,
+`scripts/stage-desktop-runtime.mjs`, owning script tests, setup/deployment/quality contracts.
+
+- [ ] U00.1 Record the exact source SHA, dirty diff, lockfile, runtime manifest, toolchain, available
+  native targets, and current failing gates in review evidence. Preserve the audit document and
+  unrelated work; use disposable test databases/profiles with synthetic content.
+- [ ] U00.2 Make desktop publication depend on canonical verification of the same immutable commit
+  SHA. Retain main/master automatic unsigned-prerelease triggers and honest labels; a failed,
+  cancelled, skipped, or missing required job must prevent publishing. Require the declared U10
+  native acceptance evidence too: until those gates exist and pass for the same SHA/artifacts,
+  publication stays blocked even if U02 makes the dependency audit green. Do not push or edit remote
+  repository settings as part of this change.
+- [ ] U00.3 Align the CI-built image with Compose's expected image, using one explicit tag/digest.
+  Prove `--no-build` starts the newly built image on a clean runner with no cached fallback.
+- [ ] U00.4 Repair staging containment with native relative-path semantics, preserving the guard
+  before recursive deletion. Cover POSIX/Windows roots, normal descendants, sibling prefixes,
+  traversal, drive/UNC changes, symlink/junction ancestors, and source/destination overlap.
+  Verify committed archive checksums before extraction and fail on unexpected manifest mutation.
+- [ ] U00.5 Run script tests and static workflow review. Carry clean-runner execution evidence into
+  U10; a locally valid YAML file alone does not establish remote CI success.
+
+Exit: the local release configuration fails closed, staging remains contained, and the image-name
+defect is repaired. No claim that a prior executable is secure or that a remote workflow ran.
+
+### U01 — Make ordinary bootstrap and retry nondestructive
+
+Files: `modules/identity/{application,infrastructure,presentation}`, `app/api/v1/demo/route.ts`,
+task demo composition, API/browser fixtures; `docs/modules/identity.md` and G1/G4 contracts.
+No schema change expected.
+
+- [ ] U01.1 Reproduce the existing-session GET failure → Retry deletion with a customized workspace.
+  Assert task IDs/content, preferences, proposal, Companion state, and stored provider credential.
+- [ ] U01.2 Separate authoritative ensure/resume from deliberate demo reset. Reuse a valid session
+  even if localStorage has no username. A legacy empty-body `POST /api/v1/demo` must become a
+  nondestructive compatibility path so cached/older clients cannot retain the deletion behavior.
+- [ ] U01.3 Keep fresh-actor seeding and scoped explicit reset, migrate fixture callers to deliberate
+  reset, and require clear intent/confirmation at any user-facing destructive action. The demo email
+  suffix cannot distinguish disposable data: current personal profiles use it too.
+- [ ] U01.4 Charge bootstrap allocation limits only when creating an actor, not when resuming one.
+  Recover from missing/unreadable optional provider settings without blocking manual startup; keep
+  the provider unavailable until repaired, without overwriting its stored key.
+- [ ] U01.5 Prove retry after a lost response from an authenticated request (or a first response whose
+  `Set-Cookie` was accepted before its body was lost), missing localStorage, port change with a
+  valid cookie, and legacy `/demo` calls preserve the same actor/data. Losing the entire anonymous
+  first response including its cookie provides no browser ownership proof; retain its data without
+  promising same-actor recovery. Cover cross-user denial,
+  explicit-reset atomicity, provider absence, and credential-decryption failure.
+
+Exit: ordinary launch/retry cannot erase an authenticated workspace. Cookie-loss recovery is not
+claimed by this checkpoint. Gate: focused unit/real-DB tests plus affected G1/G4, a11y/responsive
+checks for changed flow, format/lint/type/boundaries, and route build.
+
+### U02 — Patch dependencies and refresh the shipped inventory
+
+Files: `package.json`, `pnpm-lock.yaml`, runtime manifest/Docker pins where affected, license checks,
+`docs/STACK.md`; owning compatibility tests. No force-upgrade command or unreviewed override.
+
+- [ ] U02.1 Refresh structured advisories and upstream release evidence; map direct/transitive paths
+  in web, Docker, and desktop artifacts. Audit version numbers are historical minimums, not a fixed
+  patch target. Distinguish a package match from demonstrated feature reachability.
+- [ ] U02.2 Choose compatible patched direct versions first; align Next with `eslint-config-next`.
+  Review Better Auth, Electron, and runtime compatibility. Use a narrow override only with a recorded
+  upstream reason, compatibility proof, and removal condition.
+- [ ] U02.3 Regenerate the lockfile; update stack/license inventory and the stale no-high/critical
+  assertion. Inventory Electron, bundled Node/PostgreSQL, and image OS packages separately from npm.
+  Keep PostgreSQL on its current major; follow U08 fixture protection before native runtime changes.
+- [ ] U02.4 Verify frozen-lockfile clean installation, license/secret checks, production audit,
+  `pnpm verify`, production Compose, and affected desktop build/runtime compatibility. If native
+  evidence is unavailable, retain that explicit open gate instead of claiming A02 fully closed.
+
+Exit: required high/critical audit gate passes and shipped runtimes have reviewed patch evidence.
+Do not hide a failing audit with exclusions; any exception requires explicit policy review and
+reachability evidence. Rollback means reverting the coherent package/lockfile/artifact change;
+reintroducing a vulnerable dependency does not produce an acceptable release candidate.
+
+### U03 — Remove nested pool acquisition from coupled transactions
+
+Files: identity public preference/check-in composition, companion public/application contracts,
+task/planner composition, `shared/db/client.ts`, and runtime-composition DB tests.
+No table, dependency, pool-size increase, or standalone XP API expected.
+
+- [ ] U03.1 Exercise the actual production public composition with a fixture pool of one. Current
+  planner factory tests omit the Companion hooks; merely expanding that test's assertions cannot
+  prove the production path. Use isolated real entrypoints, or one small factory shared by runtime
+  and tests; do not build a second test-only composition or DI container.
+- [ ] U03.2 Require a `DatabaseTransaction` for source-coupled XP. Extend the existing public identity
+  preference reader with an explicit executor and forward it throughout; use the already computed
+  authoritative local date for check-in. No browser-supplied XP dates or actor fields.
+- [ ] U03.3 Preserve source idempotency, daily planner uniqueness, and aggregate versions. Prove
+  task completion, Apply, and check-in succeed at pool size one; force XP/source failures in both
+  directions and assert all source/ledger/profile writes roll back together.
+- [ ] U03.4 Use deterministic barriers for more distinct-user commands than pool slots; cover
+  midnight/timezone equality, retry, duplicate Apply, and cross-user denial. Include canonical
+  preference rows in fixtures and retain the existing daily planner unique index.
+- [ ] U03.5 Measure representative command/export/migration durations, then freeze finite connection
+  acquisition, statement, lock, and idle-transaction deadlines in configuration/operations docs.
+  Use driver/server cancellation semantics; do not return from `Promise.race` while SQL still runs.
+  Apply appropriate operation-specific policies so export/migrations are not accidentally killed.
+  Short test deadlines must prove rollback, released clients, and subsequent successful commands.
+
+Exit: one command uses its owning transaction throughout; saturation and failure terminate without
+partial data. Gate: real PostgreSQL runtime-composition/concurrency suite, boundaries, owning unit
+tests, and affected G1/G3. Deadlines contain failures; they do not replace fixing the pool escape.
+
+### U04 — Enforce the memory cap atomically and disclose eviction
+
+Files: companion application/repository/public contract, identity reset coordination, narrow memory
+feedback UI; module contracts and owning DB/browser tests. No persisted byte counter or migration.
+
+- [ ] U04.1 Acquire a Companion-owned transaction advisory lock by authenticated actor and stable
+  namespace. In the same transaction, sum SQL `octet_length(text)`, calculate incoming UTF-8 bytes,
+  select only IDs/byte lengths in bounded oldest-first `(created_at,id)` batches, evict enough, insert,
+  and return the actual committed eviction count. Preserve existing 500-character input semantics.
+- [ ] U04.2 Make save, single-card removal, Companion deletion, and profile reset participate in the
+  same guard. Identity uses a narrow public application coordination port and executor-aware account
+  deletion. Acquire the guard before memory locks or account cascade; review concurrent XP/profile
+  deletion for inverse ordering. Never deep-import lock SQL or serialize unrelated task commands.
+- [ ] U04.3 Cover exact/over-limit ASCII/CJK/emoji saves, timestamp ties, multiple evictions, concurrent
+  near-cap saves, rollback after eviction, separate-user independence, pool size one, and lock-timeout
+  recovery. At least one real-DB case uses the actual 30 MiB limit. Exercise save versus remove,
+  Companion deletion, and profile reset in both operation acquisition/interleaving orders while
+  preserving one lock hierarchy; deleted accounts cannot be recreated. Include an already-over-cap
+  fixture from the old race: the next successful save reconciles it under the same guard with
+  disclosed eviction. Do not silently bulk-delete existing cards during deployment.
+- [ ] U04.4 Show the returned positive eviction count with existing UI patterns; preserve the memory
+  draft on failure and do not announce uncommitted success. Test browser feedback and authorization.
+
+Exit: each successful save leaves memory at or below 30 MiB, including previously over-cap actors;
+reset/delete races have defined atomic outcomes. Untouched pre-existing excess is not silently erased.
+SQL aggregation still scans an actor's cards; this does not claim constant-time accounting or solve
+A10 polling. Gate: real-DB races, affected G4/Companion paths, a11y and 1440/1024/390 checks; run
+`pnpm verify:design` for shared presentation/token/target changes.
+
+### U05 — Renew browser cookies without inventing recovery
+
+Files: identity authentication gateway/configuration, response-capable session route/client path,
+launcher copy where needed; identity/setup/security and G1/G4 contracts.
+
+- [ ] U05.1 Inspect the patched Better Auth behavior and make session lifetime/update policy explicit.
+  Implement an intentional response-capable refresh that forwards every required `Set-Cookie`.
+  Prevent read-only Server Components from silently renewing only DB state. See
+  [Better Auth's Next integration](https://better-auth.com/docs/integrations/next).
+- [ ] U05.2 Preserve no-store responses, trusted-origin checks, cookie security attributes, server-side
+  session validation, and protected-route denial. Use supported integration APIs rather than custom
+  cookie signing. Add a throttled active-use/focus renewal trigger; a new endpoint or longer expiry
+  without a caller is insufficient.
+- [ ] U05.3 With controlled time, assert both actual browser-cookie and DB-session expiry advance,
+  actor/data survive renewal and restart, and missing/forged/expired credentials cannot claim an
+  existing actor. Keep a protected route continuously open beyond its original cookie expiry and
+  prove active-use continuity. Verify the installed/upgraded integration, not only a mocked gateway.
+- [ ] U05.4 State the browser limitation honestly: lost/expired cookies can leave retained workspace
+  data inaccessible. New workspace creation must not imply recovery or delete the old records.
+  Do not introduce recovery codes, email/password UI, or username-based ownership.
+
+Exit: active-use browser renewal is proven. Browser recovery remains deferred. Gate: auth/DB tests,
+actual browser G1/G4 and cookie inspection, changed-flow accessibility/responsive checks, route build.
+
+### U06 — Bound all provider operations across actors and processes
+
+Files: assistant-owned provider/admission application and infrastructure, all callers, validated
+configuration; assistant/data/architecture/stack/quality contracts and generated migration if needed.
+
+- [ ] U06.1 Inventory planner, check-in, Ameth chat, prompt analysis, and key verification; remove
+  duplicate verification on key save. Freeze validated defaults and ceilings for deployment/actor
+  request budgets, in-flight concurrency, input/output sizes, provider timeouts, and lease duration.
+  Record units, retry behavior, operation weights if necessary, and how operators override them.
+  AIF extends this inventory to every conversation/model continuation and summarization call; add
+  whole-run step/call/token/time ceilings, cancellation, and bounded resume without bypassing admission.
+- [ ] U06.2 Use one assistant-owned execution/admission boundary with PostgreSQL-shared atomic
+  buckets/leases. Follow the complete data-model gate before new typed tables: semantic search,
+  ownership/invariants/dictionary, reviewed generated migration, fresh/upgrade/authorization tests.
+  No generic JSONB, identity limiter reuse, Redis, background worker, or billing surface.
+  Include forward-fix/rollback notes in the migration review before implementation.
+- [ ] U06.3 Acquire admission in a short transaction and release its connection before HTTP. Enforce
+  deadlines and expiring leases; release slots on every outcome. Never refund a dispatched request's
+  budget merely because its response timed out. Deployment totals/active protections survive actor
+  reset/deletion, process restart, and multiple app instances. Bound retention/cleanup of expired
+  operational rows without deleting active protections or requiring a new scheduled service.
+  Use database-authoritative time for windows/leases; the lease must outlast the enforced local
+  request deadline plus cancellation/cleanup allowance. Preserve `maxRetries: 0` or explicitly
+  account for every provider attempt. A paused process must revalidate before dispatch after expiry.
+- [ ] U06.4 Reject with stable `RATE_LIMITED`/safe retry metadata and zero provider calls; do not queue
+  unbounded work. Admission-store failure disables provider calls, while manual workflows remain
+  usable. Persist opaque operational metadata only; keep prompts, responses, keys, and raw chat out.
+- [ ] U06.5 Prove all five paths, account/server keys, multi-actor/multi-instance contention, actor
+  churn, boundary rollover, cancellation, timeout, crash/lease expiry, and store failure. Assert
+  `store:false`, bounded input/output, redaction, no leaked DB connection, and no unauthorized domain
+  writes. Include a slow call at the lease boundary and process pause → expiry → resume. Use a
+  deterministic provider fixture; live paid calls are not required.
+
+Exit: configured aggregate call/local-attempt concurrency ceilings cannot be bypassed through actor
+rotation or another app process. Upstream work may outlive local cancellation; these controls do not
+promise an exact RM spending cap or absolute remote concurrency. Gate: policy/unit and
+real-DB contention/migration tests, provider-degraded G3/Companion/Prompt paths, route/env build.
+
+### U07 — Own desktop processes from acquisition through shutdown
+
+Files: `electron/main.ts`, `electron/runtime.ts`, `electron/runtime-process.ts`, small responsibility-
+specific runtime modules and deterministic process tests; `electron-builder.yml`, package audit and
+native smoke scripts; architecture/setup/runtime contracts.
+
+- [ ] U07.1 Create one runtime owner before spawning: `starting`, `ready`, `degraded`, `stopping`,
+  `failed`; own abort, registered children, readiness, and an idempotent cleanup promise. Put secret
+  preparation and all resource acquisition under cleanup. Quit must cancel/wait during startup too.
+- [ ] U07.2 Attach lifetime error/exit listeners immediately. Bound every command and captured output;
+  settle once, retain redacted phase/error diagnostics, and stop work promptly on cancellation.
+  Use only bounded retries for identified transient bind collisions; port probing is not reservation.
+- [ ] U07.3 Minimize inherited environments by child purpose. Keep bootstrap/migration credentials
+  out of the regular Next child; never pass a durable recovery bearer through child arguments/env.
+  Stop application work, Next, then PostgreSQL with bounded `pg_ctl` and confirmed exit. Escalate
+  only against owned processes; prove Windows tree handling and no orphan on signal exit.
+- [ ] U07.4 On a post-readiness child failure, leave ready immediately, clean up dependents, and offer
+  a minimal native retry/recovery action. No automatic restart loop after migration, corruption,
+  permission, or disk failures. Preserve data/secrets and retry only after cleanup completes.
+- [ ] U07.5 Inject failure/quit at each startup phase, duplicate stop, hung command, spawn/signal
+  errors, output overflow, failed termination, occupied ports, and post-ready child death. Packaged
+  native evidence must cover process exit and preserved fixture data, not just mocked handles.
+  Update the builder file list for extracted modules; audit every runtime import inside the actual
+  package and launch its Electron entry. A smoke importing checkout `dist-electron/runtime.js`
+  cannot prove that the installed package contains the same complete module graph.
+
+Exit: failures terminate or enter an explicit bounded recovery state without losing ownership of
+children. Gate: deterministic lifecycle tests and native failure/shutdown checks for each target.
+Any web recovery UI added later needs its routed screen/accessibility contract.
+
+### U08 — Replace desktop trust authentication without losing existing data
+
+Files: Electron storage/runtime provisioning, migration runner configuration, platform checks and
+native fixtures; setup/security/architecture/quality contracts. This is a role/authentication change,
+not a PostgreSQL major-version or product data-schema redesign.
+
+- [ ] U08.1 Before changing an installed fixture, stop it and rehearse complete application-data
+  backup/restore with its matching prior executable: entire cluster, original `instance-secret`,
+  session/profile evidence, and later new credential files. Include synthetic tasks, Companion data,
+  and an encrypted fake key. JSON export alone is not rollback. Never run the old binary against a
+  partially migrated cluster. Reuse this protection before any U02 native runtime patch.
+  Rehearse restoration under the intended OS user/device; record OS-protected credential
+  decryption limits. A copied data directory is not proof of recovery on another account/device.
+  This fixture prerequisite is independently executable before U02: it does not depend on U07 or
+  completion of U08. Missing native access leaves that target's runtime patch/evidence pending,
+  not U01 or unrelated web fixes.
+- [ ] U08.2 Enforce owner-only existing/new data and secret paths: macOS ownership/modes and Windows
+  owner-SID/DACLs, including symlink/junction/inherited-permission checks. Fail safely on unsupported
+  protection. Generate separate DB credentials; never rotate the existing instance secret here.
+- [ ] U08.3 For fresh clusters, use unique protected credentials, SCRAM, and a protected initdb password
+  file. Remove all applicable trust fallbacks, including local/replication rules. No secret in command
+  arguments, logs, renderer, or package. Audit administrative extension provisioning separately.
+- [ ] U08.4 Separate bootstrap administration, schema-owning migration login without superuser, and
+  runtime schema-usage/DML/sequence privileges. Review current/future-table grants against actual
+  Better Auth and migrations; runtime cannot create databases/roles, elevate, or run schema migrations.
+  Transfer legacy application schema/table/sequence and migration-journal ownership to the migrator
+  in a reviewed scope; grants alone do not permit ALTER on old objects. Review extension ownership
+  separately, prove a subsequent upgrade migration, and deny runtime `SET ROLE` to elevated roles.
+- [ ] U08.5 Spike a stopped-cluster legacy transition on Windows and macOS before selecting its
+  implementation. PostgreSQL single-user provisioning is a candidate, not a proven cross-platform
+  recipe. Require exclusive ownership and a protected backup; do not reopen a TCP trust listener
+  merely to change credentials. If the spike fails, design/review another secured transition before
+  migration coding. See [PostgreSQL single-user mode](https://www.postgresql.org/docs/17/app-postgres.html)
+  and [SCRAM authentication](https://www.postgresql.org/docs/17/auth-password.html).
+- [ ] U08.6 Use an atomic versioned journal with durable checkpoints: credentials saved, roles
+  provisioned, authentication installed, authenticated login verified, normal startup enabled.
+  Journal stores no duplicate secrets. Interrupt at every durable write; resume with the same
+  credentials and never fall back to trust, reinitialize, or delete ambiguous data.
+- [ ] U08.7 Prove fresh and legacy upgrades, wrong/empty-password denial, second-OS-user file and DB
+  denial, runtime privilege denial, offline migrations, restart and full restore. Preserve actor/task
+  IDs, data, and encrypted-key readability. Lost credentials, unknown major, corrupt journal, or ACL
+  failure must preserve the directory and explain operational recovery without guessing ownership.
+
+Exit: fresh and existing supported installations require authenticated least-privilege access.
+macOS mode checks are not Windows ACL evidence. Gate: native authentication, interruption, process,
+upgrade, and restore matrix; inspect arguments/logs/artifacts for secret exposure.
+
+### U09 — Recover the same desktop actor using OS-protected proof
+
+Files: identity application/authentication boundary and possible typed binding schema, Electron main
+storage/session integration; identity/data/architecture/setup/quality contracts.
+
+- [ ] U09.1 Freeze the enrollment/recovery protocol before coding. Prefer Electron OS-backed secret
+  storage plus protected files/ACLs; fail closed if protection is unavailable, with no plaintext
+  fallback. Verify APIs against the pinned Electron version. Account for OS-user/device binding in
+  restore instructions. [Electron safeStorage](https://www.electronjs.org/docs/latest/api/safe-storage)
+  is a storage primitive, not an authorization or same-user malware boundary.
+- [ ] U09.2 Generate a capability distinct from DB/auth/provider secrets. Identity owns authenticated
+  enrollment, actor binding, proof validation, session issuance, and revocation. If a binding table
+  is necessary, store only verifier/hash material and complete the schema/migration gate first.
+  Review forward-fix/rollback behavior before adding the binding migration.
+  Electron uses a narrow main-to-server channel; no feature/database imports in Electron.
+- [ ] U09.3 Protect initial enrollment as well as recovery against arbitrary local/browser clients:
+  valid actor session plus installation-specific main-process proof. Loopback/Origin headers alone
+  are not proof. Scope the trusted channel to the owned server/startup, make enrollment idempotent,
+  and review replay/concurrent-enrollment rules. No capability in renderer/preload, URLs, logs,
+  arguments, ordinary responses, or export; main sets returned cookies through Electron's session.
+- [ ] U09.4 Enroll a fresh actor or a legacy actor with a valid session. If an old installation has
+  neither a valid session nor an enrolled capability, preserve its data and report recovery
+  unavailable. Never choose the first/only actor, username, or demo suffix. Reset revokes the binding;
+  stale local proof cannot resurrect deleted data or bypass current authorization.
+- [ ] U09.5 Verify same actor/data after expiry, cleared Electron cookies, changed port, restart, and
+  upgrade; reject forged/foreign/revoked proof. Cover missing/corrupt/read-only secret storage,
+  interrupted enrollment, duplicate recovery, reset races, and cancellation during shutdown. A
+  request without trusted main-process proof cannot enroll or recover an existing desktop actor.
+
+Exit: supported desktop recovery works on Windows and macOS; the browser limitation and legacy
+unenrolled limitation remain explicit. Gate: auth/DB/migration tests, packaged native cookie/data
+survival and reset/hostile-client tests. Do not claim general account recovery or cross-device sync.
+
+### U10 — Verify the integrated candidate and publish only tested artifacts
+
+Files: verification/publication workflows, runtime staging/package audit and smoke scripts,
+release metadata; quality/setup/deployment/stack contracts and finding acceptance evidence.
+
+- [ ] U10.1 Run `pnpm verify` on the exact candidate, plus clean/upgrade migrations and clean-runner
+  production Compose health, worker, signal, and provider-absent checks. Refresh the dependency and
+  runtime audit after all changes. Repair any required failure before package sign-off.
+- [ ] U10.2 Replace obsolete email-signup runtime smoke with the real profile path: bootstrap, create
+  a task, restart, expire/clear desktop cookies, recover the same actor, and verify saved data. Move
+  all fixtures before narrowing any obsolete public auth endpoints in a later A17 change.
+- [ ] U10.3 Verify macOS arm64, macOS x64, and Windows x64 separately: package contents/checksums,
+  headless runtime smoke, interactive G10, offline/no-provider operation, legacy upgrade/restore,
+  and lifecycle/authentication faults. Record unsigned test status separately from stable
+  signing/notarization. Missing hosts/signing credentials leave corresponding release gates open.
+- [ ] U10.4 Join verification, native build/test, and publication by one immutable SHA. Publish the
+  exact tested artifacts without rebuilding; attach SHA, app/runtime versions, platform, checksums,
+  and gate evidence. A failed/missing required target must block the declared release set. Retain
+  authorized automatic prerelease policy; production distribution still requires its signing gate.
+- [ ] U10.5 Self-review the complete diff for scope, boundaries, schema, authorization, secret/data
+  exposure, dead code, migration rollback, and retained limitations. Map each A01–A09 finding to its
+  passing regression and operational evidence. Update acceptance checkboxes in place; do not append
+  a session diary. Keep reports/results with the candidate review artifacts, excluding user data.
+
+Exit: only proven findings are closed. Report source, exact commands/results, native targets,
+remaining limitations, and whether this is local verification, CI artifact readiness, unsigned
+prerelease readiness, or signed distribution. No remote push/deployment/publication is performed
+merely because local checks pass.
+U10 may close the hardening/naming candidate before AIF4 finishes. AIF5 must run this established
+verification pipeline again against the integrated conversational candidate; later A0/P packages
+likewise require fresh final-artifact evidence. Checkboxes do not transfer certification across SHAs.
+
+### Plan review and execution gates
+
+These resolutions govern checkpoint entry and closure; they are not implementation or release proof.
+U00/U01 require no additional product decision. Later technical choices stay at their owning gates.
+
+| Review concern | Required resolution in this plan |
+|---|---|
+| Existing clients can still erase data | U01 changes the legacy endpoint's ordinary behavior, not only the new launcher. |
+| Session renewal mistaken for account recovery | U05 proves cookie + DB renewal; U09 requires durable proof; browser recovery is explicitly deferred. |
+| Tests bypass the faulty production composition | U03 tests actual public runtime wiring with a one-connection pool. |
+| Quota race survives delete/reset | U04 coordinates every memory-set mutation under one lock order. |
+| New actors bypass AI limits | U06 deployment-wide state survives actor rotation and spans app processes. |
+| Fresh-install hardening leaves old clusters vulnerable | U08 includes stopped-cluster transition, interruption, restore, and each OS permission model. |
+| Desktop recovery trusts arbitrary localhost callers | U09 requires installation-specific enrollment proof and keeps the bearer out of renderer/process metadata. |
+| Packaging success mistaken for release verification | U00/U10 bind canonical and native evidence to one SHA and tested artifact bytes. |
+| New Electron imports omitted from installers | U07 updates packaging and tests the actual packaged module graph and native entry. |
+| Urgent repairs wait on AI research | U00 and AIF1 are independent starts; AIF2 waits for both required inputs. |
+| AIF2 requires later conversation infrastructure | AIF2 closes the private command core; AIF4 proves real lifecycle integration before activation. |
+| Post-commit model failure reported as no change | AIF4 reconciles committed receipts even if narration, schema validation, or provider response fails. |
+| Earlier native results reused for a later AI binary | AIF5 joins AIF4/N01 and reruns U10 plus native G11 on the combined candidate. |
+| Deadline pressure relaxes acceptance | No skipped required check closes the package; historical dates confer no exception. |
+
+The remaining technical choices are bounded implementation gates, not missing product authorization:
+U02 patched versions; U03 measured timeout values; U06 explicit admission defaults/table design;
+U08 proven legacy transition and ACL implementation; U09 exact protected enrollment protocol/schema.
+Before AIF code, AIF1 freezes authority fixtures, persistence and resource budgets, and harness
+evaluation criteria; N01 inventories existing namespaces and selects the supported migration path.
+Resolve each with code/primary-source evidence before its dependent mutation. If a solution would
+require a new product capability or cut an existing commitment, apply the scope-change protocol.
+
+The common checkpoint gate is format/lint/type/boundaries, changed unit behavior, real-DB persistence
+and authorization evidence, and applicable browser/build/native checks listed above. Flow/UI changes
+also require a11y and 1440/1024/390 review; shared presentation changes require `pnpm verify:design`.
+Run `pnpm verify` for every package candidate and final closure. A pre-existing failure is reported
+as a failure, not waived; it can leave a focused patch ready for integration while U remains open.
+
+## N — Omplish naming consistency
+
+- [ ] N01 Replace all project-owned OpenTask/opentask branding with Omplish/omplish, using the
+  appropriate case for display names, technical identifiers, and environment constants. Inventory
+  tracked text and paths, UI/metadata/assets, package and installer identity, source identifiers,
+  configuration, Docker/CI/scripts, tests/fixtures, exports, and current documentation. Verify
+  already-renamed surfaces instead of assigning new identities unnecessarily.
+
+Order and ownership: the integration owner may inventory in parallel; integrate after U00–U09 and
+before U10. Reuse U00.3's canonical image-tag fix. Serialize shared configuration and migration work;
+update affected setup, identity, portability, data, and packaging contracts in the implementation.
+
+Compatibility: changing Compose project/volume names must not attach an empty database or abandon
+existing data. Changing environment defaults does not rename initialized PostgreSQL roles/databases.
+Provide a reviewed, interruption-safe migration with backup/restore for any changed persisted
+namespace, and verify existing browser/desktop profiles, cookies, preferences, exports, protected
+credentials, and instance secrets remain usable. Never reset data or rotate secrets just to rename.
+Classify identifiers as display-only, already renamed, stable compatibility aliases, or requiring
+migration. Define conflict handling when old/new namespaces both exist, interrupted migration
+resumption, and prevention of concurrent old/new app access before touching persisted names.
+
+Boundaries: match branding semantically, not arbitrary substrings. Keep task-action names such as
+`openTask` and `reopenTask`; correct accidental branding substitutions in action callbacks where
+found. Do not rewrite user-authored content, third-party names/URLs, applied migration history, or
+factual historical evidence. Retain old spelling only in documented compatibility/migration cases,
+their fixtures, or accurate historical references. Renaming this checkout or the remote repository
+is a separate operational action, not part of this task.
+
+Gate: a case-insensitive tracked-content/path scan finds no unexplained legacy branding; review an
+explicit exception list. Prove clean install and existing-data upgrade/restart, session/profile
+continuity, export compatibility, and matching CI/Compose image names. Run applicable quality,
+build, browser, and native checks; U10 verifies the final renamed artifacts. The rename introduces
+no new features, broad visual redesign, or trademark-clearance claim.
+
 ## A0 — Ameth Companion (user-authorized priority package)
 
-Before resuming P0–P8, add `modules/companion` with its reviewed profile/XP/summary migration,
+After U/AIF close and before resuming P0–P8, finish the remaining `modules/companion` acceptance for its profile/XP/summary migration,
 authenticated API contracts, private export integration, and global responsive presentation surface.
-The package awards deterministic XP from source-module transactions; it never gates a manual workflow,
-persists raw chat, or bypasses the planner review/apply boundary. Avatar assets are supplied at
+The package awards deterministic XP from source-module transactions; it never gates manual or core
+assistant workflows, stores a parallel transcript, or writes tasks directly. Its shared conversation
+entry follows the assistant's controlled execution policy. Avatar assets are supplied at
 `public/ameth/level-{1,2,3}.webp`; a token-backed fallback is required until those assets exist.
 
-Gate: migration/ownership/idempotency tests; provider-absent/no-mutation chat tests; shell keyboard,
+Gate: migration/ownership/idempotency tests; provider-degraded/shared-entry and no-Companion-writer tests; shell keyboard,
 touch, reduced-motion, and responsive evidence; export/privacy checks; `pnpm verify`.
 
 P2, P3, and P5 may run in parallel only after P1 freezes their public contracts. P4 may begin pure
@@ -90,7 +725,7 @@ Only the integration owner edits or serializes:
 - Browser/Docker/database/full gates run centrally and sequentially to avoid shared-state and machine
   resource conflicts.
 
-## LF00 — Activate contracts and protect the green baseline (2–4 hours, serial)
+## LF00 — Reconcile contracts and verify the baseline (2–4 hours, serial)
 
 ### Boundary
 
@@ -100,10 +735,10 @@ Planning and current-truth repair only. Do not add product code, dependency, rou
 
 - Apply the five-part user-authorized scope change across `AGENTS.md`, scope, goal, plan,
   architecture, stack, data, module, design, quality, setup, and manifest contracts.
-- Promote only P0–P8. Keep Stage A–D explicit and non-active.
+- Reconcile authorized U/AIF/A0/P0–P8 contracts. Keep Stage A–D explicit and non-active.
 - Define local/self-host completion and remove hosted deployment as a goal prerequisite without
   deleting optional deployment guidance.
-- Preserve the current green candidate as the rollback/submission fallback and confirm repository,
+- Preserve the exact baseline without assuming it is green and confirm repository,
   Node/pnpm, PostgreSQL, migrations, demo entry, and provider-absent baseline.
 - Inventory exact tables/routes/dependencies before later schema changes.
 
@@ -115,32 +750,33 @@ Planning and current-truth repair only. Do not add product code, dependency, rou
   tests pass; run `pnpm verify` when PostgreSQL/browser prerequisites are available.
 - No P0–P8 production implementation appears in the LF00 diff.
 
-## P0 — Editorial Focus visual-system migration (24–40 serial hours; 14–22 elapsed)
+## P0 — Approved visual baseline, evidence reconciliation, and remaining gaps
 
 ### Boundary
 
-Presentation/design only for the already-working core. Preserve every route, workflow, state,
-authorization rule, API, data model, module boundary, and information architecture. Follow the
-pinned research source through the application contract in `docs/design/editorial-focus.md`.
+`DESIGN.md` and `docs/design/editorial-focus.md` establish the approved foundation and current-route
+baseline. Preserve it; this package does not authorize another font/token or whole-route redesign.
+Inventory implemented behavior, approval evidence, and current checks, then repair demonstrated
+gaps without changing APIs, data, authorization, or the accepted AIF interaction. Missing verification
+is an open acceptance item, not permission to remake the screen. Estimate remaining work after P0.1.
 
-### P0.1 — Foundation and five-screen proof (8–12 hours; then stop)
+### P0.1 — Reconcile foundation and five-screen evidence
 
 Deliverables:
 
-- Capture the current App launch, Today, Calendar, task-detail, and populated AI Review baselines before
-  changing executable tokens.
-- Finalize original light/dark semantic tokens, contrast pairs, type scale, density, radii,
-  elevation, focus, and motion in docs, CSS, and computed design tests together.
-- Self-host the GetDesign-recommended, reviewed OFL-licensed EB Garamond Variable substitute for
-  display moments and Inter Variable for working UI through `next/font/local`; use only the font's
-  genuine 400–800 axis, commit font licenses, and add no font runtime dependency.
-- Update shared tokens/primitives first. Target task titles near 15/22 px and comfortable two-line
-  rows near 64 px while preserving 36 px fine-pointer controls and 44 px touch targets.
-- Implement only the five real proof surfaces with deterministic demo/fixture data. Keep serif and
-  atmosphere out of dense task/calendar/form content.
-- Capture 1440 and 390 light proofs, representative dark proofs, and 768/320 boundary evidence. AI
-  Review mobile evidence must show both populated proposal content and sticky Apply controls.
-- Present current/new comparison evidence and stop for explicit user approval.
+- Map the approved App launch, Today, Calendar, task-detail, and populated inferred-plan review
+  proof to the current implementation. Preserve the accepted conversation composition and its
+  inline/linked review flow; do not restore the superseded standalone planner layout.
+- Verify existing semantic tokens, contrast, typography, density, target sizes, motion, vendored
+  EB Garamond/Inter assets, genuine font axes, and license notices against the routed contracts.
+  Do not reinstall or replace already-correct assets/primitives merely to close this package.
+- Distinguish existing approval, passing current tests, missing evidence, and demonstrated defects.
+  Reuse identifiable prior approvals for unchanged surfaces; recapture missing/current evidence
+  without representing new screenshots as user-approved.
+- For any proposed visual correction, identify its scope and capture deterministic before/after
+  1440/390 light, representative dark, and 768/320 boundary proofs. Inferred-plan review must show
+  populated content and confirmation controls. Obtain explicit approval before dependent rollout.
+- Re-estimate only remaining verification and repairs; preserve all original acceptance obligations.
 
 Gate:
 
@@ -150,28 +786,30 @@ Gate:
   responsive overflow review.
 - Diff proves no behavior/API/schema/route change and no copied branding, asset, copy, palette,
   layout, audio motif, proprietary font, or trade dress.
-- **Explicit user screenshot approval.** P0.2 cannot start without it.
+- Existing baseline approval remains valid for unchanged design decisions. New/changed proof
+  requires explicit screenshot approval before its dependent P0.2 rollout; silence is not approval.
 
-### P0.2 — Approved full-screen migration (12–20 serial hours)
+### P0.2 — Close verified gaps within the approved system
 
-After the shared foundation freezes, run three non-overlapping presentation lanes:
+After P0.1, repair only inventoried gaps, using non-overlapping presentation lanes where needed:
 
 1. Direct app launch, local profile setup, Settings, loading/offline surfaces, and responsive shell.
 2. Task navigation, rows, quick add, details, editors, overlays, dialogs, and every task state.
-3. Today/Upcoming, Calendar, Matrix, and planner Describe/Processing/Review/Result states.
+3. Today/Upcoming, Calendar, Matrix, and the accepted conversational workspace/inferred-plan states.
 
 Each lane preserves behavior tests and covers light/dark/system plus default, empty, loading, error,
 offline, permission, provider, and conflict states. No lane changes shared tokens without
-integration-owner review.
+integration-owner review and applicable approval. Already-correct routes require verification, not
+rewriting. No remaining feature is cut because its existing evidence is incomplete.
 
-### P0.3 — Integration audit and design freeze (4–8 hours)
+### P0.3 — Current regression evidence and acceptance closure
 
 - Inspect every route at 1440, 1024, 768, 390, and 320 CSS px, plus coarse pointer, reduced motion,
   200% zoom, keyboard-only paths, focus entry/return, and light/dark/system themes.
 - Run `pnpm verify:design`, affected G1–G4 paths, `pnpm test:a11y`, `pnpm build`, then `pnpm verify`.
-- Audit that task text is measurably less cramped, operational density remains usable, and no mixed
-  old/new component hierarchy remains.
-- Obtain final migrated screenshot approval before feature UI starts.
+- Audit typography/density against current contracts and verify one coherent approved hierarchy.
+- Retain prior approval for unchanged surfaces and obtain final approval for changed screenshots
+  before dependent feature UI proceeds. AIF approval does not authorize unrelated broad restyling.
 
 ## P1 — Local-core stabilization (10–16 serial hours; 7–10 elapsed)
 
@@ -392,11 +1030,12 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 
 ### Deliverables
 
-- Audit the serial export-schema versions already integrated by P2-P6 and validate the final combined
-  document containing recurrence rules/events, habits/schedules/logs, completed focus history, and
-  portable reminder definitions.
+- Audit the serial export-schema versions already integrated by AIF and P2-P6 and validate the final
+  combined document containing retained conversations/visible receipts, approved memory, recurrence
+  rules/events, habits/schedules/logs, completed focus history, and portable reminder definitions.
 - Exclude push subscriptions, endpoint keys, delivery/queue internals, credentials, provider secrets,
-  raw planner input, and server configuration.
+  duplicated internal planner/provider payloads, graph checkpoints/traces, and server configuration.
+  User input retained as conversation messages remains portable under its explicit history contract.
 - Extend isolated deterministic demo reset across every released package without pre-granting push
   permission or requiring OpenAI/VAPID.
 - Update README/setup/worker/PWA/VAPID/export/security/friend-test/submission guidance; hosted
@@ -453,7 +1092,10 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 
 | Active capability | Package | Primary evidence |
 |---|---|---|
-| Editorial Focus | P0 | approved proof/final screenshots + design/a11y gates |
+| Urgent data/session/runtime/resource safety | U00–U10 | A01–A09 regressions + browser/native/CI evidence and full gate |
+| Consistent Omplish naming with preserved existing data | N01 | legacy-name scan + clean/upgrade/session/export evidence before U10 |
+| AI-first conversation, controlled execution, history and evidence | AIF1–AIF5 | G11 + command/Undo/receipt/replay/privacy gates and approved primary-interface proof |
+| Editorial Focus | P0 | reconciled baseline approval, changed-proof approval, current design/a11y/regression gates |
 | Existing local-profile/tasks/planning/AI | P1 | G1–G4 + authorization/atomicity/freshness tests |
 | Recurrence/occurrences | P2 | recurrence golden path + range/DST/ownership suites |
 | Habits | P3 | Habits golden path + log/streak/time suites |
@@ -471,14 +1113,14 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 | A lane misses two 90-minute checkpoints | preserve its last green commit, stop the lane, and reassign or reassess; do not hide partial code |
 | Shared contract/schema changes after consumers start | integration owner freezes consumers, updates the contract once, then rebases; consumers do not invent adapters |
 | Browser/Docker resource pressure | keep coding lanes active but run heavy environment gates centrally and one at a time |
-| New package is not fully green before submission work | retain the stable core candidate; do not merge a partial redesign/feature |
+| New package is not fully green at candidate selection | keep it out of the release; use a prior candidate only if its required evidence still holds |
 | External OpenAI/VAPID/browser permission is absent | keep fixture/provider-degraded paths green and report the exact manual smoke blocker |
 | Native runtime source/checksum/license or signing input is unresolved | do not designate an installer production-ready; keep the unpacked development/runtime work isolated |
 | Desktop AI key configuration is not implemented | document environment-only development access; do not claim packaged-user key management is complete |
 | Time pressure suggests a feature cut | request user approval for whole packages in reverse dependency order; update all five scope-change surfaces |
 | Later-scope code/control/table/dependency appears | remove it before integration regardless of time already spent |
 
-Never cut authorization isolation, manual core behavior, review-before-apply AI, migration integrity,
+Never cut authorization isolation, manual core behavior, controlled AI execution/confirmation, migration integrity,
 export privacy, or required audits to make room for an extension. P0 is coherent or it does not
 replace the existing coherent design.
 

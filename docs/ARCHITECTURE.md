@@ -132,6 +132,11 @@ Domain tests must cover spring-forward/fall-back behavior for at least one repre
   context-isolated desktop marker.
 - Desktop local writes are ordinary authenticated application writes to the per-user local database.
   They are not queued, replicated, or merged with another device.
+- Urgent desktop hardening preserves that boundary: Electron owns process lifetime and OS-protected
+  credential storage; identity owns enrollment/recovery and session issuance behind an explicit
+  trusted process channel. Renderer/preload never receives a recovery capability. Database
+  bootstrap/migration credentials are separate from least-privilege runtime credentials. Exact
+  upgrade/protocol gates are U07–U09 in `docs/IMPLEMENTATION_PLAN.md`, not existing runtime guarantees.
 
 These boundaries authorize only the capabilities listed in `docs/SCOPE.md`. Stage A-D remain later
 roadmap context and contribute no dormant route, table, provider, or framework to this release.
@@ -142,8 +147,9 @@ roadmap context and contribute no dormant route, table, provider, or framework t
 summary, explicit memory cards, and the presentation/API contracts for Ameth. It has no raw conversation store. Source
 modules award XP through its narrow application contract inside their transaction; a unique
 `(user_id, action_type, source_key)` ledger constraint makes retries harmless. The module may only
-read feature facts through public application readers. Chat is advisory: it can hand users to Plan,
-but it cannot issue task mutations or bypass proposal review/apply.
+read feature facts through public application readers. Companion does not issue task mutations;
+its entry joins the assistant-owned conversation and controlled command policy rather than
+maintaining a second execution path.
 
 No third-party behavioral analytics are permitted. Derived summaries are readable, rebuildable,
 deletable, and included only in the authenticated private export. Provider absence gives a scripted,
@@ -154,19 +160,23 @@ unlock contract, while companion never depends on prompts. Prompt analysis is an
 request, uses `store: false`, returns reviewable metadata only, and cannot save or modify a prompt.
 Prompt tags carry the owning user ID and a composite foreign key to the same-user prompt.
 
-## AI planner architecture
+## Conversational assistant architecture
 
-The assistant is a proposal pipeline, not an autonomous agent.
+Conversation orchestrates existing application capabilities. Tasks/planning retain canonical facts
+and deterministic rules; assistant owns context, runs, policy, confirmation, and committed receipts.
+The AIF contract is an implementation target, not a description of the current narrower planner.
 
 ```mermaid
 flowchart LR
-    INPUT["Brain dump + selected task IDs + constraints"] --> LOAD["Authorize and load minimal context"]
-    LOAD --> MODEL["GPT-5.6 Structured Output"]
-    MODEL --> VALIDATE["Zod + semantic validation"]
-    VALIDATE --> SCHEDULE["Deterministic free-interval scheduler"]
-    SCHEDULE --> PROPOSAL["Persist versioned proposal"]
-    PROPOSAL --> REVIEW["User edits/selects diff"]
-    REVIEW --> APPLY["Revalidate current versions and atomic apply"]
+    INPUT["Authenticated user instruction"] --> LOAD["Bounded history + fresh authorized facts"]
+    LOAD --> MODEL["Interpret intent and select allowed tools"]
+    MODEL --> POLICY{"Application execution policy"}
+    POLICY -->|"Explicit and reversible"| COMMAND["Validated command"]
+    POLICY -->|"Inferred or bulk"| REVIEW["Exact diff + user confirmation"]
+    POLICY -->|"Ambiguous or unsupported"| CLARIFY["Clarify or decline"]
+    REVIEW --> COMMAND
+    COMMAND --> APPLY["Recheck state + atomic mutation and receipt"]
+    APPLY --> VIEWS["Conversation result + editable task/calendar views"]
 ```
 
 Hard rules:
@@ -178,6 +188,17 @@ Hard rules:
 - Deterministic code owns overlap, work-window, timezone, version, authorization, and allowed-action rules.
 - Proposal payload has `schemaVersion`, prompt/model metadata, expiry, and an idempotent apply token.
 - The user sees uncertainties and overflow; the system does not fabricate resolution.
+- Framework state never owns current tasks or authorizes a write. Stable operation IDs and receipts
+  reconcile domain commit with a later failed graph checkpoint/response; no distributed exactly-once
+  claim is inferred from a checkpointer.
+- Keep one bounded assistant, a small tool allowlist, and the existing application/module interfaces.
+  LangChain/LangGraph code stays behind assistant-owned orchestration/provider persistence seams;
+  domain modules never import the framework. No generic SQL, shell, filesystem, or subagent tools.
+- Separate transcript history, derived summaries, approved memory, and execution checkpoints. Enforce
+  deletion fencing and bounded context through the assistant contract; no second long-term memory store.
+- The recommended harness candidate is TypeScript `createAgent` on LangGraph. Exact packages,
+  migration/schema exceptions, pool budgets, serialization, and provider behavior pass the AIF1/stack
+  gate before adoption. Hosted LangSmith is not an architectural requirement.
 
 The release uses Structured Outputs because OpenAI documents schema adherence and native Zod SDK helpers, while still handling explicit refusals and semantic mistakes. See `docs/modules/assistant.md`.
 
