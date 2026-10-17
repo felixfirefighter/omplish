@@ -15,6 +15,49 @@ Manual tasks, planning, habits, Focus, export, and already loaded UI must remain
 or push configuration is absent. Every capability below must meet its acceptance criteria and the
 gates in `docs/QUALITY.md`.
 
+### AI-first interaction and controlled execution
+
+Conversation becomes the primary workspace for expressing intent, refining plans, and seeing
+execution results. Tasks, Today, Calendar, and other committed views remain canonical, editable
+inspection/correction surfaces and provider-absent fallback. This changes interaction priority;
+it does not remove any committed feature below or authorize external task execution.
+
+The user selected these policies:
+
+- Explicit reversible instructions may execute directly through server-owned policy. Inferred plans,
+  bulk changes, and destructive actions require confirmation; ambiguity requires clarification.
+- Initial tools cover task creation, text updates, priority, and scheduling. Direct execution is
+  bounded to one owned task per turn with tested version-checked Undo. Other manual APIs do not
+  automatically become AI tools; no unsupported action becomes allowed merely through confirmation.
+- Conversation history persists across sessions with owner-scoped delete/export controls. Durable
+  user-approved memory remains separate, inspectable, editable, and deletable. Compaction bounds model
+  input without silently deleting visible history. Detailed policy belongs to the assistant contract.
+
+Acceptance:
+
+- One conversational surface reaches current task/planning application services, with no framework
+  or model direct database writes and no separate Companion execution path.
+- Server-issued receipts record actual committed commands; retries/recovery return the same outcome.
+  Intent, diff, constraints, current-view links, and safe Undo let users inspect and correct the result.
+- Every provider call and entire run are bounded; authorization, confirmation, versions, domain
+  rules, and deletion/cancellation are rechecked before side effects.
+- History deletion fences active runs and purges transcript-derived summaries/checkpoints. Committed
+  tasks and separately approved memory have independent lifecycles, disclosed before deletion.
+- G11 and the revised conversational visual proof pass before the new primary interface ships.
+  LangChain/LangGraph adoption is subject to `docs/STACK.md`; no package or checkpoint schema is
+  approved solely by this product decision.
+
+### Project naming consistency
+
+The user authorized replacing project-owned OpenTask/opentask naming with Omplish/omplish across
+product copy, source/configuration, packaging, and current documentation. N01 in
+`docs/IMPLEMENTATION_PLAN.md` owns the inventory, compatibility migration, and verification.
+
+Acceptance: active branding is consistent; remaining legacy references are explicitly justified by
+compatibility or factual history. Existing data, profiles, credentials, and exports survive the
+transition. Task-action identifiers and user-authored content are not branding. This does not
+authorize a remote repository rename, broad redesign, or a claim of trademark clearance.
+
 ### Urgent hardening priority
 
 The user-authorized A01–A09 repairs in `docs/IMPLEMENTATION_PLAN.md` U00–U10 take precedence over
@@ -31,39 +74,44 @@ retained data must not be deleted or silently reassigned when recovery is unavai
 
 The user has explicitly authorized Ameth Companion to be implemented ahead of the remaining P0–P8
 packages. It is an optional, local-first companion: deterministic XP, a three-level avatar/progression
-surface, non-persistent chat, and transparent first-party behavior summaries. It must not gate manual
-task workflows or permit AI to mutate data. Current checkout integration covers task completion and
+surface, and transparent first-party behavior summaries. Assistant owns the persistent conversation
+and controlled execution; Companion never becomes an alternative task writer or gates manual/AI
+workflows behind progression. Current checkout integration covers task completion and
 provides extension hooks for Habits, Focus, and planner application as those packages land.
 
 Acceptance:
 
 - The avatar, XP preview, responsive chat drawer, and provider-absent scripted state are available on every authenticated workspace route.
 - XP is server-awarded, idempotent by opaque action source, user-scoped, and transactionally rolls back with the originating mutation.
-- Raw chat and task-content histories are never persisted; summaries are user-readable, rebuildable, deletable, and exported only through the private export contract.
+- Companion summaries do not retain raw chat or task-content histories; assistant-owned conversation
+  and execution evidence follow the separate retention/export contract. Summaries remain readable,
+  rebuildable, deletable, and included only in private export.
 - Three levels are 0, 300, and 1,000 XP. Level 3 unlocks the standalone Prompt Library; it never hides task, planning, or Focus workflows. Habits are excluded from Ameth XP and analytics.
 - Ameth is English-only. It retains only explicit, user-approved memory cards, capped at 30 MiB per user by UTF-8 bytes; saving above the cap removes the oldest cards with visible disclosure.
 - A daily Ameth mode is restored across same-day reopen and resets only when the user next opens the app on a later local date.
 
-### 1. Editorial Focus design migration
+### 1. Editorial Focus baseline and remaining acceptance
 
-- Migrate the existing product to the GetDesign-informed Editorial Focus application direction in
-  `docs/design/editorial-focus.md` without changing product behavior or information architecture.
-- Use an open-source editorial display face only for major moments and a highly readable sans face
-  for working UI; vendor font files and license notices when implementation begins.
-- Increase task-text comfort while retaining productive density, strong form boundaries, semantic
+- Preserve the approved foundation and current-route baseline in `DESIGN.md` and
+  `docs/design/editorial-focus.md`. P0 reconciles existing approval, implementation, and current
+  verification evidence, then closes demonstrated gaps without remigrating already-correct UI.
+- Verify the vendored open-source display/working fonts and license notices; retain the existing
+  hierarchy rather than installing a new visual system.
+- Verify task-text comfort while retaining productive density, strong form boundaries, semantic
   status colors, 44 px touch targets, dark/system themes, and keyboard equivalence.
 - Use atmospheric decoration only on public, first-run, empty, and restrained planner-framing
   surfaces; never as task/calendar/status decoration.
-- The first implementation checkpoint is a deterministic App launch, Today, Calendar, task-details,
-  and populated AI Review proof at desktop/mobile widths. Broad migration stops for explicit user
-  screenshot approval.
+- Preserve the App launch, Today, Calendar, task-details, and populated inferred-plan review proof
+  obligations. Existing approval covers unchanged design; changed proofs require explicit user
+  screenshot approval before dependent rollout. AIF's new conversation retains its separate gate.
 
 Acceptance:
 
-- The user approves the proof before the remaining routes are restyled.
+- Baseline approval is reconciled with current evidence; new/changed proofs have explicit approval.
+  Missing test evidence is not treated as a passed gate or permission for broad restyling.
 - Every active route passes the responsive, theme, zoom, keyboard, and accessibility gates.
-- Existing G1–G4 behavior is unchanged; no route, API, schema, authorization rule, or feature is
-  added by the visual migration.
+- G1–G4 and the accepted AIF/G11 behavior remain intact; no route, API, schema, authorization rule,
+  or feature is added by P0's visual repairs.
 - No ElevenLabs/GetDesign branding, copy, asset, proprietary font, exact palette/layout, audio motif,
   or trade dress appears in the shipped product.
 
@@ -80,8 +128,9 @@ Acceptance:
   schedule/occurrence due boundary is overdue or within the user's next 24 hours; timed `end_at` or
   the exclusive all-day `end_date` in the saved IANA timezone supplies that boundary, and an
   unscheduled task is not urgent.
-- Optional GPT-5.6 planner remains a proposal/review/apply pipeline with no write before explicit
-  Apply and a complete no-key/manual fallback.
+- Inferred/bulk GPT-5.6 planning retains proposal/review/confirmation with no write before approval.
+  Explicit reversible single-task instructions use the controlled command policy; both paths share
+  deterministic application validation, transaction safety, and no-key/manual fallback.
 - Settings may store one profile-owned OpenAI API key encrypted on the server, without returning the
   secret to the browser; resetting the profile removes the key and all owned workspace data.
 - Close the audited local-core gaps: contextual quick add uses the current Inbox or regular list with
@@ -282,8 +331,9 @@ Acceptance:
   or share-target integrations beyond the Electron desktop shell and installable web app.
 - Browser account recovery after cookie loss, recovery-code/email/password UI, or username-based
   ownership recovery. Browser cookie renewal and enrolled desktop recovery remain active repairs.
-- Billing, subscriptions, commercial quota tiers, advertisements, premium gates, autonomous agent
-  behavior, or AI deletion/completion.
+- Billing, subscriptions, commercial quota tiers, advertisements, premium gates, unsolicited
+  background autonomy, or AI tools beyond the declared create/update/prioritize/schedule set.
+  Deletion/completion remain manual capabilities; a general confirmation rule does not enable them.
 
 ## Later roadmap — not part of the active goal
 

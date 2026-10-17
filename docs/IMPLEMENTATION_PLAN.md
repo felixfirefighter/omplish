@@ -8,15 +8,19 @@ sequence; Git retains that history.
 
 - Urgent hardening U00–U10 takes priority over remaining A0 and P0–P8 work. It repairs existing
   commitments; it does not authorize later-roadmap features or broad restyling.
+- The AI-first AIF contracts and bounded harness evaluation precede new feature expansion. AIF
+  production execution waits for U00–U06; desktop distribution also waits for U07–U10. Existing
+  Companion/P0–P8 capabilities remain committed, with their interaction work reconciled to AIF.
+  U00 starts without AIF1; U01 follows U00. Independent AIF1 evaluation must not delay these repairs.
 - The [architecture audit](research/ARCHITECTURE_AUDIT.md) records the inspected source, findings,
   and validation limits. Its dependency audit failed; the audited checkout is not a fully green
   release candidate. Preserve existing work and record the exact baseline before implementation.
 - A package becomes a candidate only after its complete gate passes. Screenshots, elapsed time,
   or a partially working feature are not merge criteria. A focused repair passing its regression
   tests does not erase an unresolved full-gate failure.
-- P0 visual proof requires explicit user approval. If approval is pending, agents may perform
-  read-only audits or the specifically independent P1 diagnostic work; silence never authorizes the
-  broad design rollout.
+- Preserve the approved Editorial Focus baseline. P0 reconciles its evidence and remaining gaps;
+  changed proofs and AIF's new composition retain explicit visual approval gates. Pending approval
+  blocks the dependent visual rollout, not urgent hardening or independent evaluation.
 - Preserve the documented automatic unsigned-prerelease policy, but fail closed unless verification
   and platform gates cover the exact source and artifact bytes being published. Editing the workflow
   does not itself authorize a push or publication. Signed production distribution remains a separate
@@ -28,17 +32,34 @@ The urgent estimates below are planning ranges, not delivery promises. Re-estima
 U08 legacy-migration spike; native test-host access and signing/release prerequisites are separate
 from engineering time. Existing P0–P8 estimates exclude urgent hardening and must be re-baselined
 against implemented acceptance evidence before those packages resume.
+The prior 90–170-hour urgent estimate does not include AIF. AIF1 must re-estimate the added history,
+receipts/Undo, context, and UI work after its compatibility/persistence experiment; do not add an
+unmeasured “LangChain integration” estimate or retain the old delivery date unchanged.
+N01 naming migration is also additional effort; estimate it after the identifier and existing-data
+inventory. Its integration must finish before U10 verifies the renamed candidate.
+P0's original migration estimate is superseded by an evidence inventory; estimate only outstanding
+acceptance and justified repairs, without charging for reinstalling an already-approved foundation.
 
 ## Release dependency graph
 
 ```mermaid
 flowchart LR
-    U["U00–U10: urgent hardening and verification"] --> A0["Remaining A0 acceptance"]
+    UCORE["U00–U06: core safety"] --> AIF2["AIF2: command core, receipts and Undo"]
+    AIF1["AIF1: contracts, harness and persistence evaluation"] --> AIF2
+    AIF1 --> AIF3["AIF3: conversational proof + explicit visual approval"]
+    AIF2 --> AIF4["AIF4: bounded persistent conversation"]
+    AIF3 --> AIF4
+    AIF4 --> AIF5["AIF5: end-to-end evidence and release review"]
+    UCORE --> UDESKTOP["U07–U09: desktop safety and recovery"]
+    UDESKTOP --> N01["N01: complete Omplish naming migration"]
+    N01 --> U10["U10: native and exact-artifact release verification"]
+    U10 --> AIF5
+    AIF5 --> A0["Remaining A0 acceptance"]
     A0 --> LF00["LF00: reconcile contracts and baseline"]
-    LF00 --> P0A["P0.1: design foundation and proof"]
-    P0A --> APPROVAL["Explicit visual approval"]
-    APPROVAL --> P0B["P0.2: full visual migration"]
-    P0B --> P0C["P0.3: design audit/freeze"]
+    LF00 --> P0A["P0.1: baseline and evidence reconciliation"]
+    P0A --> APPROVAL["Retain baseline approval; approve changed proof"]
+    APPROVAL --> P0B["P0.2: remaining visual gaps"]
+    P0B --> P0C["P0.3: regression and acceptance audit"]
     P0C --> P1["P1: local-core stabilization"]
     P1 --> P2["P2: recurrence"]
     P1 --> P3["P3: habits"]
@@ -53,6 +74,151 @@ flowchart LR
     P6 --> P7
     P7 --> P8["P8: Electron desktop local runtime"]
 ```
+
+The graph shows package closure dependencies. AIF1 and U00 are independent starting points; the
+U table below owns checkpoint order. AIF5's web checks may run after AIF4 while native verification
+is pending. Desktop sign-off joins AIF4 and N01 on the final candidate and reruns U10's artifact
+gates plus native G11; an earlier hardening-only U10 pass cannot certify changed AIF binaries.
+
+## AIF — AI-first interaction and execution
+
+The selected product policy is recorded in `docs/SCOPE.md` and `docs/modules/assistant.md`:
+conversation primary, explicit reversible commands eligible for direct execution, inferred/bulk/
+destructive actions requiring confirmation, persistent owner-controlled history, and separately
+approved durable memory. The initial tool set stays create/update/prioritize/schedule; approval
+does not enable unsupported tools. Preserve manual paths and all remaining release commitments.
+
+The first vertical slice is **“plan tomorrow, then correct one task”**: conversation → constraints/
+diff → confirmed inferred plan → committed receipt and live views → explicit single-task correction
+→ safe Undo. It exercises the product claim before adding more tools or background autonomy.
+
+### AIF1 — Freeze interfaces and evaluate the harness
+
+- [ ] AIF1.1 Freeze the command policy, exact confirmation binding, history/memory/delete/export
+  behavior, receipt fields, thread concurrency/cancellation semantics, and interfaces owned by
+  assistant versus tasks/planning/companion. Review the conflict/deny cases before happy paths.
+  Define instruction-to-target/field binding with quoted, negated, inferred, ambiguous, stale, and
+  injected-input fixtures; model confidence is not authority. Freeze concrete context/storage/run
+  limits, exact persistence dictionaries, lifetimes, and export version before dependent code.
+- [ ] AIF1.2 Compare the direct SDK with one TypeScript `createAgent` harness using isolated synthetic
+  fixtures. Evaluate tool selection/refinement, bounded context, replay/interrupt behavior, model
+  request invariants, latency/tokens, connection usage, retained bytes, and shipped-size/dependency
+  impact. No Deep Agents, general shell/filesystem tools, vector service, or multiagent runtime.
+  Freeze shared workloads, model/settings, repeat counts, semantic expectations, and numeric
+  latency/token/storage/size budgets before comparison. Require zero unauthorized/duplicate writes
+  and false success in deterministic fixtures; report live interpretation quality separately.
+- [ ] AIF1.3 Inspect exact candidate versions/licenses/advisories and PostgreSQL saver implementation.
+  Review whether checkpoint tables require an explicit data-model exception, managed migrations,
+  serialization compatibility, restricted grants, bounded connection pool, and deletion fencing.
+  Do not use startup DDL or assume `thread_id` authorizes anything.
+- [ ] AIF1.4 Select the simplest passing harness, record the decision and exact stack/data requirements,
+  and re-estimate remaining effort. Stop framework adoption if it weakens provider policy, domain
+  idempotency, tenancy, or deletion. The direct SDK remains the comparator, not a second production
+  orchestration path to maintain indefinitely.
+
+Gate: reviewed interfaces and repeatable comparison evidence; no benchmark or framework capability
+claim without its fixture/result. AIF1 can run without native target access and cannot weaken U gates.
+
+### AIF2 — Deterministic execution, committed receipts, and safe Undo
+
+Depends on U00–U06 and AIF1. Reuse the existing task/planning validation and proposal applier.
+This package builds the private execution core, not a publicly enabled conversational command path.
+Thread/run persistence, checkpoint integration, and source-deletion fencing ship in AIF4. Keep the
+current reviewed proposal flow until real lifecycle integration passes; no permissive runtime guard
+or test adapter may enable direct AI writes.
+
+- [ ] AIF2.1 Build the internal user-command path alongside confirmed proposals, sharing deterministic
+  application execution. Bind actor/current instruction, normalized allowed targets/fields, expected
+  versions, stable operation identity, and the AIF1 lifecycle-guard interface. Enforce one-task direct scope
+  across the whole turn; model confidence or tool-call count is not authorization.
+- [ ] AIF2.2 Add exact approval binding for inferred/bulk work; edits invalidate approval and an
+  ambiguous “yes” cannot approve a plan. Recheck state/permissions/confirmation inside the mutation
+  transaction through the lifecycle-guard interface that AIF4 will bind to real run/deletion state,
+  including concurrent calendar changes and expired/revoked approval. Keep provider work outside SQL.
+- [ ] AIF2.3 Review dictionary/SQL migrations for assistant-owned effective commands, confirmations,
+  and receipts; do not add task state replicas or generic JSON. Commit result evidence with each
+  mutation. Identical retries return the original receipt; changed payload reuse conflicts.
+- [ ] AIF2.4 Implement version-checked compensation for each direct action before enabling it. Test
+  subsequent edits/dependent records, conflicting schedules, and create-then-Undo without granting
+  a general AI delete tool. If compensation is unavailable, require confirmation for that operation.
+- [ ] AIF2.5 Prove cross-user denial, untrusted authority rejection, duplicate delivery, altered input,
+  receipt rollback, commit-before-response failure, and safe Undo with real PostgreSQL and the actual
+  task/planning writers. Exercise guard denial/rollback using controlled test lifecycle inputs;
+  this proves the command interface only. Real thread cancellation/deletion/checkpoint races and
+  post-commit provider/narration failures are AIF4 integration requirements, not AIF2 exit evidence.
+
+Gate: deterministic policy and real-DB evidence; proposed/committed/unknown outcomes stay distinct.
+Receipts establish what committed, not semantic correctness or execution of external tasks. AIF2
+closure does not enable direct AI execution or claim real conversation-lifecycle safety.
+
+### AIF3 — Prove the conversational interaction before rollout
+
+Uses AIF1 contracts and synthetic deterministic results; independent of production agent execution.
+Preserve the approved Editorial Focus foundation and existing P0 approval requirements.
+
+- [ ] AIF3.1 Produce `/plan` conversation proofs for fresh/returning history, explicit command,
+  inferred plan confirmation, receipt/Undo, conflict/unknown outcome, deletion, and provider absence.
+  Keep task/Today/Calendar inspection and direct correction visible; avoid a second Ameth chat silo.
+  Deletion must disclose loss of associated receipts and assistant Undo while committed tasks remain.
+- [ ] AIF3.2 Update routed screen/shell behavior for keyboard/mobile conversation, inline or linked
+  plan diff, accessible progress, focus retention, and history/memory controls. Do not restyle tokens
+  or turn every simple manual action into a mandatory model request.
+- [ ] AIF3.3 Validate 1440/1024/390 and required boundary widths, a11y, reduced motion/themes, and
+  shared design contracts. Obtain explicit screenshot approval before the primary navigation/default
+  launch changes. Approval of the earlier UI does not approve this new composition.
+
+Gate: accepted interaction proof plus deterministic browser/a11y/design evidence. No live “applied”
+claims may be simulated outside clearly identified fixtures/prototype evidence.
+
+### AIF4 — Persistent, bounded conversation using the selected harness
+
+Depends on AIF1/AIF2, approved AIF3, and the corresponding schema/stack gates.
+
+- [ ] AIF4.1 Implement assistant-owned threads/messages and minimal resumable run state with explicit
+  owner queries, bounded pagination/storage admission, managed migrations, and history export/delete
+  in the same package. Retain history until user deletion or a selected policy; never silently evict it.
+- [ ] AIF4.2 Assemble bounded recent turns, lossy summaries, relevant approved memory, and fresh
+  task queries. Use existing search/filters first. Define tested token/result/step/time bounds; charge
+  every model attempt, compaction, and retry through U06. Verify actual provider wire requests.
+- [ ] AIF4.3 Connect the selected narrow harness to allowlisted public application tools; no direct
+  repository access. Serialize/fence concurrent turns and resumptions, renew authorization, preserve
+  receipt identity, and reconcile outcomes after process restart or checkpoint failure.
+  Bind AIF2's lifecycle guard to real owned thread/run state inside command transactions. Prove
+  commit-before-checkpoint and post-commit provider/schema/narration failure preserve the applied
+  receipt without replay or a false no-change result.
+- [ ] AIF4.4 Fence and cancel active runs/approvals before thread deletion, then purge messages,
+  summaries, linked planner-proposal/effective-command/receipt/Undo payloads, thread snapshots/
+  checkpoints/blobs and retrieval copies. Atomically order deletion against command commits and
+  prevent stale domain/checkpoint writes after deletion wins. Preserve committed tasks/separately
+  approved memories with explicit disclosure; retain only bounded content-free replay metadata.
+  Deny deleted-thread Undo. Memory edits, deletion, and FIFO eviction invalidate affected summaries
+  and assembled/resumable context; retained history cannot silently reactivate removed saved memory.
+- [ ] AIF4.5 Integrate one conversation into `/plan` and Ameth entry, then switch accepted default
+  launch from Today. Persist drafts/history honestly, show committed receipts/current-view links,
+  and retain direct manual fallback. Progression never gates core assistant access.
+  Enable direct execution only after real-DB production-composition tests prove thread ownership,
+  cancellation/deletion ordering, checkpoint-write fencing, injection resistance, and all G11 cases.
+
+Gate: G11, persistence/authorization/migration/export/deletion tests, long-history fixtures, actual
+provider-request contract tests, bounded retries/concurrency, and approved responsive UI evidence.
+
+### AIF5 — Validate the product claim and re-baseline the remaining release
+
+- [ ] AIF5.1 Compare the complete vertical slice against the existing manual/planner flow: time and
+  interactions to a correct plan, corrections, wrong/duplicate writes, false success, tokens/cost,
+  latency, retention size, and recovery. Use recorded fixtures for repeatability; distinguish any
+  separately configured live-provider results from deterministic tests.
+- [ ] AIF5.2 Run `pnpm verify`, production Compose, required migration/upgrade and provider-absent
+  gates. Join integrated AIF4 and N01 changes on one candidate SHA; rerun U10's canonical/native
+  artifact gates and native G11 for that SHA before desktop sign-off. Reuse no earlier binary's
+  approval for changed code. Web checks may finish while native gates remain explicitly pending.
+- [ ] AIF5.3 Reconcile remaining A0/P0–P8 interaction tasks with the accepted conversation. Keep every
+  committed recurrence/habit/Focus/PWA/reminder/export/desktop capability; report any proposed cut
+  for explicit scope change rather than silently dropping it. Remove superseded UI assumptions,
+  duplicate conversational paths, dead tools, and unsupported claims.
+
+Gate: verified conversation-to-plan/correction/receipt loop, clear evidence limits, and an updated
+remaining plan. No automatic new tool, background execution, or external integration is enabled.
 
 ## U — Urgent architecture remediation
 
@@ -77,7 +243,7 @@ each checkpoint. All execution checkboxes below remain open until their evidence
 | U07 | Desktop process ownership and failure handling / A09 | Electron runtime | U02 | 10–16 h |
 | U08 | Authenticated desktop PostgreSQL, including upgrades / A05 | runtime, migrations | U07 | 16–32 h |
 | U09 | Durable desktop identity / A03 desktop portion | identity, Electron main | U05, U08 | 12–24 h |
-| U10 | Native verification and exact-artifact release gate / A08, final closure | integration | U00–U09 | 12–24 h |
+| U10 | Native verification and exact-artifact release gate / A08, final closure | integration | U00–U09, N01 | 12–24 h |
 
 Budget **90–170 engineering hours** before external waiting and unanticipated migration findings.
 These are estimates, not measured throughput. U01 is the first product behavior fix. U00's local
@@ -272,6 +438,8 @@ configuration; assistant/data/architecture/stack/quality contracts and generated
   duplicate verification on key save. Freeze validated defaults and ceilings for deployment/actor
   request budgets, in-flight concurrency, input/output sizes, provider timeouts, and lease duration.
   Record units, retry behavior, operation weights if necessary, and how operators override them.
+  AIF extends this inventory to every conversation/model continuation and summarization call; add
+  whole-run step/call/token/time ceilings, cancellation, and bounded resume without bypassing admission.
 - [ ] U06.2 Use one assistant-owned execution/admission boundary with PostgreSQL-shared atomic
   buckets/leases. Follow the complete data-model gate before new typed tables: semantic search,
   ownership/invariants/dictionary, reviewed generated migration, fresh/upgrade/authorization tests.
@@ -302,7 +470,8 @@ real-DB contention/migration tests, provider-degraded G3/Companion/Prompt paths,
 ### U07 — Own desktop processes from acquisition through shutdown
 
 Files: `electron/main.ts`, `electron/runtime.ts`, `electron/runtime-process.ts`, small responsibility-
-specific runtime modules and deterministic process tests; architecture/setup/runtime contracts.
+specific runtime modules and deterministic process tests; `electron-builder.yml`, package audit and
+native smoke scripts; architecture/setup/runtime contracts.
 
 - [ ] U07.1 Create one runtime owner before spawning: `starting`, `ready`, `degraded`, `stopping`,
   `failed`; own abort, registered children, readiness, and an idempotent cleanup promise. Put secret
@@ -320,6 +489,9 @@ specific runtime modules and deterministic process tests; architecture/setup/run
 - [ ] U07.5 Inject failure/quit at each startup phase, duplicate stop, hung command, spawn/signal
   errors, output overflow, failed termination, occupied ports, and post-ready child death. Packaged
   native evidence must cover process exit and preserved fixture data, not just mocked handles.
+  Update the builder file list for extracted modules; audit every runtime import inside the actual
+  package and launch its Electron entry. A smoke importing checkout `dist-electron/runtime.js`
+  cannot prove that the installed package contains the same complete module graph.
 
 Exit: failures terminate or enter an explicit bounded recovery state without losing ownership of
 children. Gate: deterministic lifecycle tests and native failure/shutdown checks for each target.
@@ -336,6 +508,8 @@ not a PostgreSQL major-version or product data-schema redesign.
   session/profile evidence, and later new credential files. Include synthetic tasks, Companion data,
   and an encrypted fake key. JSON export alone is not rollback. Never run the old binary against a
   partially migrated cluster. Reuse this protection before any U02 native runtime patch.
+  Rehearse restoration under the intended OS user/device; record OS-protected credential
+  decryption limits. A copied data directory is not proof of recovery on another account/device.
   This fixture prerequisite is independently executable before U02: it does not depend on U07 or
   completion of U08. Missing native access leaves that target's runtime patch/evidence pending,
   not U01 or unrelated web fixes.
@@ -431,11 +605,14 @@ Exit: only proven findings are closed. Report source, exact commands/results, na
 remaining limitations, and whether this is local verification, CI artifact readiness, unsigned
 prerelease readiness, or signed distribution. No remote push/deployment/publication is performed
 merely because local checks pass.
+U10 may close the hardening/naming candidate before AIF4 finishes. AIF5 must run this established
+verification pipeline again against the integrated conversational candidate; later A0/P packages
+likewise require fresh final-artifact evidence. Checkboxes do not transfer certification across SHAs.
 
 ### Plan review and execution gates
 
-Security, data-integrity, and runtime/dependency reviews found no remaining planning blocker after
-the resolutions below. This is a review of task completeness, not implementation or release proof.
+These resolutions govern checkpoint entry and closure; they are not implementation or release proof.
+U00/U01 require no additional product decision. Later technical choices stay at their owning gates.
 
 | Review concern | Required resolution in this plan |
 |---|---|
@@ -447,11 +624,18 @@ the resolutions below. This is a review of task completeness, not implementation
 | Fresh-install hardening leaves old clusters vulnerable | U08 includes stopped-cluster transition, interruption, restore, and each OS permission model. |
 | Desktop recovery trusts arbitrary localhost callers | U09 requires installation-specific enrollment proof and keeps the bearer out of renderer/process metadata. |
 | Packaging success mistaken for release verification | U00/U10 bind canonical and native evidence to one SHA and tested artifact bytes. |
+| New Electron imports omitted from installers | U07 updates packaging and tests the actual packaged module graph and native entry. |
+| Urgent repairs wait on AI research | U00 and AIF1 are independent starts; AIF2 waits for both required inputs. |
+| AIF2 requires later conversation infrastructure | AIF2 closes the private command core; AIF4 proves real lifecycle integration before activation. |
+| Post-commit model failure reported as no change | AIF4 reconciles committed receipts even if narration, schema validation, or provider response fails. |
+| Earlier native results reused for a later AI binary | AIF5 joins AIF4/N01 and reruns U10 plus native G11 on the combined candidate. |
 | Deadline pressure relaxes acceptance | No skipped required check closes the package; historical dates confer no exception. |
 
 The remaining technical choices are bounded implementation gates, not missing product authorization:
 U02 patched versions; U03 measured timeout values; U06 explicit admission defaults/table design;
 U08 proven legacy transition and ACL implementation; U09 exact protected enrollment protocol/schema.
+Before AIF code, AIF1 freezes authority fixtures, persistence and resource budgets, and harness
+evaluation criteria; N01 inventories existing namespaces and selects the supported migration path.
 Resolve each with code/primary-source evidence before its dependent mutation. If a solution would
 require a new product capability or cut an existing commitment, apply the scope-change protocol.
 
@@ -461,15 +645,50 @@ also require a11y and 1440/1024/390 review; shared presentation changes require 
 Run `pnpm verify` for every package candidate and final closure. A pre-existing failure is reported
 as a failure, not waived; it can leave a focused patch ready for integration while U remains open.
 
+## N — Omplish naming consistency
+
+- [ ] N01 Replace all project-owned OpenTask/opentask branding with Omplish/omplish, using the
+  appropriate case for display names, technical identifiers, and environment constants. Inventory
+  tracked text and paths, UI/metadata/assets, package and installer identity, source identifiers,
+  configuration, Docker/CI/scripts, tests/fixtures, exports, and current documentation. Verify
+  already-renamed surfaces instead of assigning new identities unnecessarily.
+
+Order and ownership: the integration owner may inventory in parallel; integrate after U00–U09 and
+before U10. Reuse U00.3's canonical image-tag fix. Serialize shared configuration and migration work;
+update affected setup, identity, portability, data, and packaging contracts in the implementation.
+
+Compatibility: changing Compose project/volume names must not attach an empty database or abandon
+existing data. Changing environment defaults does not rename initialized PostgreSQL roles/databases.
+Provide a reviewed, interruption-safe migration with backup/restore for any changed persisted
+namespace, and verify existing browser/desktop profiles, cookies, preferences, exports, protected
+credentials, and instance secrets remain usable. Never reset data or rotate secrets just to rename.
+Classify identifiers as display-only, already renamed, stable compatibility aliases, or requiring
+migration. Define conflict handling when old/new namespaces both exist, interrupted migration
+resumption, and prevention of concurrent old/new app access before touching persisted names.
+
+Boundaries: match branding semantically, not arbitrary substrings. Keep task-action names such as
+`openTask` and `reopenTask`; correct accidental branding substitutions in action callbacks where
+found. Do not rewrite user-authored content, third-party names/URLs, applied migration history, or
+factual historical evidence. Retain old spelling only in documented compatibility/migration cases,
+their fixtures, or accurate historical references. Renaming this checkout or the remote repository
+is a separate operational action, not part of this task.
+
+Gate: a case-insensitive tracked-content/path scan finds no unexplained legacy branding; review an
+explicit exception list. Prove clean install and existing-data upgrade/restart, session/profile
+continuity, export compatibility, and matching CI/Compose image names. Run applicable quality,
+build, browser, and native checks; U10 verifies the final renamed artifacts. The rename introduces
+no new features, broad visual redesign, or trademark-clearance claim.
+
 ## A0 — Ameth Companion (user-authorized priority package)
 
-After U closes and before resuming P0–P8, finish the remaining `modules/companion` acceptance for its profile/XP/summary migration,
+After U/AIF close and before resuming P0–P8, finish the remaining `modules/companion` acceptance for its profile/XP/summary migration,
 authenticated API contracts, private export integration, and global responsive presentation surface.
-The package awards deterministic XP from source-module transactions; it never gates a manual workflow,
-persists raw chat, or bypasses the planner review/apply boundary. Avatar assets are supplied at
+The package awards deterministic XP from source-module transactions; it never gates manual or core
+assistant workflows, stores a parallel transcript, or writes tasks directly. Its shared conversation
+entry follows the assistant's controlled execution policy. Avatar assets are supplied at
 `public/ameth/level-{1,2,3}.webp`; a token-backed fallback is required until those assets exist.
 
-Gate: migration/ownership/idempotency tests; provider-absent/no-mutation chat tests; shell keyboard,
+Gate: migration/ownership/idempotency tests; provider-degraded/shared-entry and no-Companion-writer tests; shell keyboard,
 touch, reduced-motion, and responsive evidence; export/privacy checks; `pnpm verify`.
 
 P2, P3, and P5 may run in parallel only after P1 freezes their public contracts. P4 may begin pure
@@ -516,7 +735,7 @@ Planning and current-truth repair only. Do not add product code, dependency, rou
 
 - Apply the five-part user-authorized scope change across `AGENTS.md`, scope, goal, plan,
   architecture, stack, data, module, design, quality, setup, and manifest contracts.
-- Promote only P0–P8. Keep Stage A–D explicit and non-active.
+- Reconcile authorized U/AIF/A0/P0–P8 contracts. Keep Stage A–D explicit and non-active.
 - Define local/self-host completion and remove hosted deployment as a goal prerequisite without
   deleting optional deployment guidance.
 - Preserve the exact baseline without assuming it is green and confirm repository,
@@ -531,32 +750,33 @@ Planning and current-truth repair only. Do not add product code, dependency, rou
   tests pass; run `pnpm verify` when PostgreSQL/browser prerequisites are available.
 - No P0–P8 production implementation appears in the LF00 diff.
 
-## P0 — Editorial Focus visual-system migration (24–40 serial hours; 14–22 elapsed)
+## P0 — Approved visual baseline, evidence reconciliation, and remaining gaps
 
 ### Boundary
 
-Presentation/design only for the already-working core. Preserve every route, workflow, state,
-authorization rule, API, data model, module boundary, and information architecture. Follow the
-pinned research source through the application contract in `docs/design/editorial-focus.md`.
+`DESIGN.md` and `docs/design/editorial-focus.md` establish the approved foundation and current-route
+baseline. Preserve it; this package does not authorize another font/token or whole-route redesign.
+Inventory implemented behavior, approval evidence, and current checks, then repair demonstrated
+gaps without changing APIs, data, authorization, or the accepted AIF interaction. Missing verification
+is an open acceptance item, not permission to remake the screen. Estimate remaining work after P0.1.
 
-### P0.1 — Foundation and five-screen proof (8–12 hours; then stop)
+### P0.1 — Reconcile foundation and five-screen evidence
 
 Deliverables:
 
-- Capture the current App launch, Today, Calendar, task-detail, and populated AI Review baselines before
-  changing executable tokens.
-- Finalize original light/dark semantic tokens, contrast pairs, type scale, density, radii,
-  elevation, focus, and motion in docs, CSS, and computed design tests together.
-- Self-host the GetDesign-recommended, reviewed OFL-licensed EB Garamond Variable substitute for
-  display moments and Inter Variable for working UI through `next/font/local`; use only the font's
-  genuine 400–800 axis, commit font licenses, and add no font runtime dependency.
-- Update shared tokens/primitives first. Target task titles near 15/22 px and comfortable two-line
-  rows near 64 px while preserving 36 px fine-pointer controls and 44 px touch targets.
-- Implement only the five real proof surfaces with deterministic demo/fixture data. Keep serif and
-  atmosphere out of dense task/calendar/form content.
-- Capture 1440 and 390 light proofs, representative dark proofs, and 768/320 boundary evidence. AI
-  Review mobile evidence must show both populated proposal content and sticky Apply controls.
-- Present current/new comparison evidence and stop for explicit user approval.
+- Map the approved App launch, Today, Calendar, task-detail, and populated inferred-plan review
+  proof to the current implementation. Preserve the accepted conversation composition and its
+  inline/linked review flow; do not restore the superseded standalone planner layout.
+- Verify existing semantic tokens, contrast, typography, density, target sizes, motion, vendored
+  EB Garamond/Inter assets, genuine font axes, and license notices against the routed contracts.
+  Do not reinstall or replace already-correct assets/primitives merely to close this package.
+- Distinguish existing approval, passing current tests, missing evidence, and demonstrated defects.
+  Reuse identifiable prior approvals for unchanged surfaces; recapture missing/current evidence
+  without representing new screenshots as user-approved.
+- For any proposed visual correction, identify its scope and capture deterministic before/after
+  1440/390 light, representative dark, and 768/320 boundary proofs. Inferred-plan review must show
+  populated content and confirmation controls. Obtain explicit approval before dependent rollout.
+- Re-estimate only remaining verification and repairs; preserve all original acceptance obligations.
 
 Gate:
 
@@ -566,28 +786,30 @@ Gate:
   responsive overflow review.
 - Diff proves no behavior/API/schema/route change and no copied branding, asset, copy, palette,
   layout, audio motif, proprietary font, or trade dress.
-- **Explicit user screenshot approval.** P0.2 cannot start without it.
+- Existing baseline approval remains valid for unchanged design decisions. New/changed proof
+  requires explicit screenshot approval before its dependent P0.2 rollout; silence is not approval.
 
-### P0.2 — Approved full-screen migration (12–20 serial hours)
+### P0.2 — Close verified gaps within the approved system
 
-After the shared foundation freezes, run three non-overlapping presentation lanes:
+After P0.1, repair only inventoried gaps, using non-overlapping presentation lanes where needed:
 
 1. Direct app launch, local profile setup, Settings, loading/offline surfaces, and responsive shell.
 2. Task navigation, rows, quick add, details, editors, overlays, dialogs, and every task state.
-3. Today/Upcoming, Calendar, Matrix, and planner Describe/Processing/Review/Result states.
+3. Today/Upcoming, Calendar, Matrix, and the accepted conversational workspace/inferred-plan states.
 
 Each lane preserves behavior tests and covers light/dark/system plus default, empty, loading, error,
 offline, permission, provider, and conflict states. No lane changes shared tokens without
-integration-owner review.
+integration-owner review and applicable approval. Already-correct routes require verification, not
+rewriting. No remaining feature is cut because its existing evidence is incomplete.
 
-### P0.3 — Integration audit and design freeze (4–8 hours)
+### P0.3 — Current regression evidence and acceptance closure
 
 - Inspect every route at 1440, 1024, 768, 390, and 320 CSS px, plus coarse pointer, reduced motion,
   200% zoom, keyboard-only paths, focus entry/return, and light/dark/system themes.
 - Run `pnpm verify:design`, affected G1–G4 paths, `pnpm test:a11y`, `pnpm build`, then `pnpm verify`.
-- Audit that task text is measurably less cramped, operational density remains usable, and no mixed
-  old/new component hierarchy remains.
-- Obtain final migrated screenshot approval before feature UI starts.
+- Audit typography/density against current contracts and verify one coherent approved hierarchy.
+- Retain prior approval for unchanged surfaces and obtain final approval for changed screenshots
+  before dependent feature UI proceeds. AIF approval does not authorize unrelated broad restyling.
 
 ## P1 — Local-core stabilization (10–16 serial hours; 7–10 elapsed)
 
@@ -808,11 +1030,12 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 
 ### Deliverables
 
-- Audit the serial export-schema versions already integrated by P2-P6 and validate the final combined
-  document containing recurrence rules/events, habits/schedules/logs, completed focus history, and
-  portable reminder definitions.
+- Audit the serial export-schema versions already integrated by AIF and P2-P6 and validate the final
+  combined document containing retained conversations/visible receipts, approved memory, recurrence
+  rules/events, habits/schedules/logs, completed focus history, and portable reminder definitions.
 - Exclude push subscriptions, endpoint keys, delivery/queue internals, credentials, provider secrets,
-  raw planner input, and server configuration.
+  duplicated internal planner/provider payloads, graph checkpoints/traces, and server configuration.
+  User input retained as conversation messages remains portable under its explicit history contract.
 - Extend isolated deterministic demo reset across every released package without pre-granting push
   permission or requiring OpenAI/VAPID.
 - Update README/setup/worker/PWA/VAPID/export/security/friend-test/submission guidance; hosted
@@ -870,7 +1093,9 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 | Active capability | Package | Primary evidence |
 |---|---|---|
 | Urgent data/session/runtime/resource safety | U00–U10 | A01–A09 regressions + browser/native/CI evidence and full gate |
-| Editorial Focus | P0 | approved proof/final screenshots + design/a11y gates |
+| Consistent Omplish naming with preserved existing data | N01 | legacy-name scan + clean/upgrade/session/export evidence before U10 |
+| AI-first conversation, controlled execution, history and evidence | AIF1–AIF5 | G11 + command/Undo/receipt/replay/privacy gates and approved primary-interface proof |
+| Editorial Focus | P0 | reconciled baseline approval, changed-proof approval, current design/a11y/regression gates |
 | Existing local-profile/tasks/planning/AI | P1 | G1–G4 + authorization/atomicity/freshness tests |
 | Recurrence/occurrences | P2 | recurrence golden path + range/DST/ownership suites |
 | Habits | P3 | Habits golden path + log/streak/time suites |
@@ -895,7 +1120,7 @@ snapshots. Core startup stays useful without browser support, VAPID, or a runnin
 | Time pressure suggests a feature cut | request user approval for whole packages in reverse dependency order; update all five scope-change surfaces |
 | Later-scope code/control/table/dependency appears | remove it before integration regardless of time already spent |
 
-Never cut authorization isolation, manual core behavior, review-before-apply AI, migration integrity,
+Never cut authorization isolation, manual core behavior, controlled AI execution/confirmation, migration integrity,
 export privacy, or required audits to make room for an extension. P0 is coherent or it does not
 replace the existing coherent design.
 

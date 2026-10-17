@@ -1,4 +1,9 @@
-# OpenAI Open Model Hackathon contract
+# Historical hackathon submission reference
+
+This document records the July 2026 submission baseline. Its deadline, availability notes, and
+proposal-only demo narrative are historical; they do not set the active release contract or claim
+current provider/plugin readiness. Use `docs/SCOPE.md`, `docs/PRODUCT.md`, and `docs/GOAL.md` for the
+current product and execution policy. Any future submission requires a fresh rules review.
 
 Checked against the official Devpost overview and rules on **2026-07-18**. Re-check the official pages before final submission because organizers may post clarifications.
 
@@ -20,7 +25,7 @@ The rules, not this summary, control if wording differs.
 
 ## Original-work boundary
 
-- Use an original final product name after a basic trademark/domain check; “Omplish” is a working name only.
+- The selected project name is Omplish; selection is not evidence of trademark or domain clearance.
 - Describe the product as inspired by the category, never as an official TickTick client or endorsed replacement.
 - Do not use TickTick, Airbnb, ElevenLabs, or GetDesign logos, screenshots, icons, copy, proprietary
   data, fonts, sounds, exact palettes/layouts, or trade dress.

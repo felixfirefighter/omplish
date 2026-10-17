@@ -2,7 +2,7 @@
 
 ## Active migration target — Editorial Focus
 
-The first Local-first Full Release work package migrates Omplish to **Editorial Focus**, using the
+The Local-first Full Release retains **Editorial Focus**, using the
 visual system documented in the pinned
 [GetDesign ElevenLabs source snapshot](https://github.com/VoltAgent/awesome-design-md/blob/e06a96660396d741d0c106c8972172254dafbdc2/design-md/elevenlabs/DESIGN.md).
 The local application contract is `docs/design/editorial-focus.md`. It follows the reference's
@@ -30,7 +30,7 @@ The interface should make a busy day feel understandable in under five seconds:
 1. What matters now is visually dominant.
 2. The next useful action is obvious but never pushy.
 3. Dense task information remains scannable.
-4. AI suggestions always look like reviewable proposals, never completed work.
+4. Proposed, awaiting-confirmation, executing, committed, and uncertain outcomes are visibly distinct.
 5. Desktop speed and mobile clarity are equally intentional.
 
 Warmth comes from paper-like color, spacing, plain language, and gentle geometry. Focus comes from
@@ -40,7 +40,8 @@ not belong in the product workspace.
 
 ## Product design principles
 
-- **Manual first:** every core workflow remains clear when AI is unavailable.
+- **Conversation primary, direct controls available:** intent starts in the assistant; task/calendar
+  views remain editable and every core workflow stays clear when AI is unavailable.
 - **One record, many views:** Inbox, Today, calendar, agenda, and matrix look different but never imply separate copies of a task.
 - **Quiet until needed:** secondary metadata recedes; conflicts, overdue work, permission problems, and destructive actions do not.
 - **Review before consequence:** completion, destructive actions, calendar moves, and planner apply have visible outcomes and recovery where appropriate.
@@ -72,6 +73,10 @@ Read only the files relevant to the surface being changed, after this file.
 | Reality-aware planner input, review, and apply | `docs/design/screens/assistant.md` |
 
 Feature scope remains owned by `docs/SCOPE.md`; a design document cannot add a feature.
+
+The AIF conversational workspace reuses these tokens/components. Existing route approval does not
+approve its new composition: deterministic conversation, confirmation, receipt/Undo, history, and
+provider-absent proofs require explicit screenshot approval before primary-navigation rollout.
 
 ## Implementation rules
 

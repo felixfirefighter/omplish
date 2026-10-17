@@ -8,7 +8,9 @@ to preserve server-side ownership and authorization for the current PostgreSQL-b
 
 - Render the direct-launch profile setup dialog and cache one validated username in browser local
   storage. The cached value is a display preference, not an authentication credential.
-- Run the scripted first-run onboarding and the returning-user check-in gate before opening Today.
+- Run the scripted first-run onboarding and the returning-user check-in gate before opening the
+  workspace. The implemented destination is `/today`; after AIF acceptance the default becomes
+  `/plan`, while Today remains directly available.
 - Persist onboarding completion, selected goals, and at most one daily check-in through the versioned
   preferences document; the local username remains browser-only.
 - Bootstrap an isolated workspace through the existing server-side session boundary without asking

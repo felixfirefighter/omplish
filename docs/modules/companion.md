@@ -1,18 +1,21 @@
 # Companion module contract
 
-`modules/companion` owns Ameth’s optional progression, private derived summaries, and non-persistent
-chat. It is a companion surface, never an autonomous agent or an alternative task writer.
+`modules/companion` owns Ameth’s optional progression, communication preferences, private derived
+summaries, and explicit approved memory. Assistant owns the shared conversation and execution path;
+Companion never becomes an alternative task writer or separate conversational authority.
 
 ## Responsibilities
 
 - Maintain a user-owned profile, three-level XP projection, and append-only idempotent award ledger.
-- Render the global avatar/progress ring, accessible XP preview, and responsive chat drawer.
+- Render the global avatar/progress ring and accessible XP preview; its conversation entry opens the
+  same assistant history rather than a separate chat silo.
 - Produce transparent, user-readable aggregate summaries without storing raw chat or task content.
-- Offer scripted provider-absent chat and route planning intent to the existing review-before-apply Plan surface.
+- Offer honest scripted provider-absent feedback and provide personality/approved context to the
+  assistant's controlled interaction contract. Progression never gates core assistant operation.
 
 ## Owned persistence
 
-- `companion_profiles`, `companion_xp_events`, and `companion_behavior_summaries`.
+- `companion_profiles`, `companion_xp_events`, `companion_behavior_summaries`, and `companion_memories`.
 
 ## Invariants
 
@@ -22,14 +25,22 @@ chat. It is a companion surface, never an autonomous agent or an alternative tas
   completed daily check-in awards 10 XP once per local day. Reapplying or rewriting the same source
   produces no additional XP.
 - Every query is constrained by `user_id`; reset cascades profile-owned companion data.
-- Chat and summaries cannot mutate tasks, schedules, status, reminders, habits, or Focus sessions.
-- No raw chat transcript, task title/description history, OpenAI key, or provider trace is persisted or logged.
+- Companion-owned handlers/summaries never write task or other domain state; the shared assistant
+  owns the controlled command path independently of the Companion entry point.
+- Companion never stores a duplicate transcript or task-content history. Assistant owns retained
+  conversations/action evidence under its deletion/export contract. No key/provider trace/content log.
 - User-approved memory cards only are durable. Their UTF-8 total is capped at 30 MiB; the oldest cards are removed before a new card exceeds that cap.
 - A `warm`, `focused`, or `direct` daily mode remains until the next local-day app reopen; default communication style remains user-configurable.
-- Version-2 private export includes companion-derived data and approved memory cards only; chat turns
-  remain browser-session-only.
+- Current version-2 export includes companion-derived data and approved memories. AIF adds
+  assistant-owned conversations/receipts through a separately versioned export change; Companion
+  does not copy that data. Memory edits, deletion, and cap eviction invalidate assistant context
+  through public application contracts, including later reconstruction from retained history under
+  the assistant's policy. Companion does not own transcript retention or deletion.
 
 ## Required tests
 
 - Level threshold, duplicate source, concurrent award, user-isolation, rollback, reset, and export tests.
-- Provider-absent chat, no-mutation, summary delete/rebuild, keyboard/touch/reduced-motion, and responsive drawer tests.
+- Provider-absent feedback and shared assistant-entry tests prove there is no Companion-owned task
+  writer; permitted assistant commands retain their normal execution policy.
+- Memory edit/delete/cap-eviction invalidation, summary delete/rebuild, keyboard/touch/reduced-motion,
+  and responsive drawer tests.

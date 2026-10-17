@@ -18,12 +18,13 @@ This file is the routing index and source-of-truth map. Keep it compact. Detaile
 | Design north star and routing | `DESIGN.md` |
 | Active visual migration target | `docs/design/editorial-focus.md` |
 | Vendored font asset sources/notices | `app/fonts/README.md` and `docs/STACK.md` |
-| Hackathon constraints/submission | `docs/HACKATHON.md` |
+| Historical hackathon/submission reference | `docs/HACKATHON.md` |
 | Reproducible local/container setup | `docs/SETUP.md` |
 | Hosted Railway deployment | `docs/DEPLOYMENT.md` |
 | Friend candidate handoff | `docs/FRIEND_TEST.md` |
 | TickTick feature research | `docs/research/TICKTICK_FEATURES.md` |
 | Architecture findings and countermeasures | `docs/research/ARCHITECTURE_AUDIT.md` (execution order: U00–U10 in `docs/IMPLEMENTATION_PLAN.md`) |
+| AI-first direction and harness evidence | `docs/research/AI_FIRST_REPOSITIONING.md` (product authority: `docs/SCOPE.md`; execution: AIF in `docs/IMPLEMENTATION_PLAN.md`) |
 | Research URLs and confidence | `docs/research/SOURCES.md` |
 
 ## Planned repository shape
@@ -37,8 +38,8 @@ modules/                 Product feature modules
   habits/                 habit definitions, local-day logs, and projections
   focus/                  authoritative timer sessions and summaries
   notifications/          task reminders, push subscriptions, and delivery worker
-  assistant/
-  companion/               Ameth progression, private summaries, and non-persistent chat
+  assistant/              conversation history, controlled execution, and receipts
+  companion/              Ameth progression, private summaries, and approved memory
   prompts/                 Level-3 reusable prompt library
   portability/
 shared/                  Approved stable cross-cutting surfaces
@@ -61,7 +62,7 @@ Each module may contain `presentation`, `application`, `domain`, and `infrastruc
 | habits | habit definitions, schedules, logs, Today/history/streak projections | `docs/modules/habits.md` |
 | focus | authoritative timer policy, completed sessions, and derived summaries | `docs/modules/focus.md` |
 | notifications | task reminders, push subscriptions, queue jobs, and Web Push delivery | `docs/modules/notifications.md` |
-| assistant | OpenAI adapter, extraction, planner proposals, review/apply | `docs/modules/assistant.md` |
+| assistant | conversation/context, controlled commands and receipts, provider adapter, proposals/confirmation | `docs/modules/assistant.md` |
 | companion | Ameth profile, XP ledger, behavior summaries, and companion interaction | `docs/modules/companion.md` |
 | prompts | user-owned standalone reusable prompts and prompt-local tags | `docs/modules/prompts.md` |
 | portability | versioned user export and future import adapters | `docs/modules/portability.md` |

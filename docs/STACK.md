@@ -81,6 +81,20 @@ Better Auth documents current Next.js integration and PostgreSQL/Drizzle support
 
 ### Release-gated dependency decisions
 
+The AIF harness candidate is TypeScript LangChain `createAgent` with its LangGraph runtime and, if
+needed, a reviewed PostgreSQL checkpointer. No LangChain/LangGraph/Deep Agents package is installed
+or approved merely by this recommendation. AIF1 compares the direct SDK against the narrow harness
+before choosing exact pins, licenses, dependency/advisory impact, runtime sizes, and interfaces.
+Keep domain code and public DTOs framework-independent; do not require hosted LangSmith or a new
+service. Default external tracing remains disabled.
+
+Adoption must prove actual provider requests preserve `store:false`, model/context limits, no hidden
+retries, and U06 admission for tool continuations, streaming, compaction, and retries. Review all
+checkpoint tables/migrations, serialization, retention/deletion, grants, and pool lifecycle against
+`docs/DATA_MODEL.md`; no ordinary-startup saver `setup()` or per-request pools. Deep Agents, generic
+filesystem/shell tools, vector infrastructure, and subagents are not initial dependencies.
+See [framework research](research/AI_FIRST_REPOSITIONING.md) for evidence and alternatives.
+
 The active release approves the capabilities below, not an unchecked package installation. Both
 packages are absent from the current `package.json` and lockfile. The named work package must rerun
 the dependency-change gate, choose and pin an exact version, review its resolved production tree,
@@ -150,11 +164,12 @@ The P2 `rrule` and P6 `web-push` candidates are intentionally absent from this b
 BSD-3-Clause and MPL-2.0 identifiers, respectively, must not be added to the executable allowlist
 until the package-specific gate has reviewed the exact resolved version and notice obligations.
 
-The current production audit reports one moderate advisory in `esbuild` 0.18.20, reached only
-through Better Auth's Drizzle Kit tooling branch. The affected capability is an opt-in esbuild
-development server; Omplish's production web, migration, and worker commands do not import or
-start it. There is no high/critical advisory and this moderate finding is not applicable to the
-deployed runtime path. Re-evaluate it whenever Better Auth or its dependency graph changes.
+The production dependency audit recorded on 16 October 2026 for commit
+`6cd5272ddde074ea2d23c5893981fc6c0dfb13db` failed with 44 advisories: 3 critical, 15 high,
+22 moderate, and 4 low. See the [dated architecture audit](research/ARCHITECTURE_AUDIT.md).
+These are historical package/advisory matches, not proof of exploitability or a current audit result.
+U02 in `docs/IMPLEMENTATION_PLAN.md` owns refreshed advisory and shipped-runtime inventories,
+reachability review, compatible patches, and verification before affected distribution.
 
 ## API style
 

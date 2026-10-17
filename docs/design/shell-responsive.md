@@ -25,13 +25,18 @@ Matrix remains available through context navigation and the command palette. Eve
 tooltip and accessible name; the selected item uses icon plus selected surface and current-page
 semantics.
 
+After AIF visual/behavior acceptance, the home/default destination is the shared conversation at
+`/plan`. Keep Today, Tasks, and Calendar directly reachable for inspection/correction and provider-
+absent use. New navigation composition requires the AIF proof; do not silently change the current shell.
+
 ### Context sidebar
 
 The sidebar changes with the active module:
 
 - Tasks: Inbox, Today, Upcoming, Completed/Cancelled, Matrix, folders, lists, and list creation.
 - Calendar: view navigation and date context, without inventing an unscheduled backlog.
-- Plan: Describe, Review, and Result route-preserved steps.
+- Plan: current baseline Describe/Review/Result; AIF replaces primary navigation with bounded
+  conversation history/new conversation and embeds those inferred-plan states within the same thread.
 - Habits: Active/Archived navigation and current habit context after P3.
 - Focus: timer and recent-history context after P4; do not create project/list navigation for Focus.
 
@@ -55,7 +60,9 @@ At 1280 px and wider, selecting a task opens a 360 px inspector without replacin
 
 ## Mobile shell
 
-- Bottom navigation contains Today, Tasks, Calendar, Plan, and More.
+- Bottom navigation contains Today, Tasks, Calendar, Plan, and More in the current baseline. AIF's
+  approved composition makes conversation primary while retaining direct task/calendar access;
+  labels/order are frozen in its visual proof, not guessed during implementation.
 - More opens a labeled sheet with Matrix, Upcoming, Completed/Cancelled, Habits after P3, Focus after
   P4, and settings. Do not render dormant entries before their package gates.
 - The selected tab uses icon, short label, and current-page semantics. Do not use icon-only mobile navigation.
@@ -63,6 +70,8 @@ At 1280 px and wider, selecting a task opens a 360 px inspector without replacin
 - Opening a task navigates to a full-page detail route. Browser/system Back returns to the same list, range, scroll position, and focused row when possible.
 - Account for `env(safe-area-inset-bottom)` beneath bottom navigation and fixed action regions.
 - The on-screen keyboard must not cover quick add, dialog actions, or planner review controls.
+- The AIF composer, confirmation/Undo controls, and conversation scroll position remain usable with
+  the keyboard open; history navigation preserves drafts and never autoscrolls away from a reading user.
 
 ## Navigation and URL state
 

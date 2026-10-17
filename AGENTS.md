@@ -27,8 +27,10 @@ coding rather than choosing one silently.
 - A researched TickTick feature is not automatically approved for implementation.
 - Only capabilities explicitly promoted into the active release may be implemented. Stage A–D and
   every item still listed outside active scope must not be started under this goal.
-- The Editorial Focus proof is an approval gate: broad restyling and later feature UI cannot pass it
-  without explicit user screenshot approval. Silence is not approval.
+- Preserve the approved Editorial Focus baseline. Changed proofs, broad restyling, and later feature
+  UI require applicable explicit screenshot approval; AIF's new composition has a separate gate.
+  Prior approval covers unchanged design only, not unrun checks. Silence is not approval, and a
+  pending visual gate does not block independent authorized hardening.
 - Do not add a “small improvement” outside the active work package. Record it in the appropriate later-scope section only if it is materially useful.
 - Do not silently cut a committed feature. A cut requires explicit user approval and an update to `docs/SCOPE.md` and `docs/GOAL.md` in the same change.
 - Plans are maintained in place. Do not append status diaries, session logs, or implementation history to planning documents. Git is the history.
@@ -84,7 +86,13 @@ Do not add generic JSONB, EAV/custom-field tables, duplicated status/date/owner 
 - Manual task workflows must function when `OPENAI_API_KEY` is absent.
 - Task, habit, Focus, export, and local startup paths must function when Web Push/VAPID is absent;
   provider absence produces an honest degraded state.
-- AI output never mutates data directly. It creates a proposal; a user reviews it; the server validates and applies it transactionally.
+- AI is the primary interaction surface; application services remain the only domain writers.
+  Explicit, reversible instructions may execute through the narrow server policy in
+  `docs/modules/assistant.md`. Inferred plans, bulk changes, and destructive actions require exact
+  confirmation; unsupported tools remain unavailable. Every write is validated transactionally,
+  produces a committed receipt, and never treats model text as authorization or success evidence.
+- Conversation history persists with owner-scoped deletion/export; approved durable memory remains
+  separate. Follow the retention and execution-fencing contract in `docs/modules/assistant.md`.
 - Browser offline support in the active release is an installable static shell and read-only
   connectivity behavior only. The authorized Electron target may write to its own local PostgreSQL
   database while disconnected, but must not queue domain writes for synchronization or claim

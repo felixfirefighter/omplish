@@ -38,8 +38,15 @@ The envelope contains `schemaVersion`, export timestamp, portable user profile/p
 - Reminder data includes the stable task relationship and portable absolute/relative specification.
   Push subscriptions, encrypted endpoint/key material, notification deliveries/idempotency state,
   and pg-boss queue rows are excluded.
-- Active structured planner proposals are included; raw brain dumps are absent because they are not
-  persisted.
+- Active structured planner proposals are included. Existing export versions contain no raw brain
+  dumps. The AIF export version adds retained user/assistant conversation messages and visible
+  execution receipts through assistant-owned readers, alongside separately approved memories.
+  Internal graph state/checkpoints, hidden reasoning, provider envelopes, and leases remain excluded.
+- Conversation persistence and its export/delete controls ship together. Deleting a thread preserves
+  committed tasks and separately approved memories, but removes linked receipts and assistant Undo
+  content. Exported relationships tolerate removed conversation sources without retaining deleted
+  text or resurrecting Undo. Export/deletion races use a defined snapshot; already downloaded files
+  cannot be recalled.
 - IDs and foreign-key references remain stable inside the document; dates use `YYYY-MM-DD` and instants use ISO-8601 UTC strings with explicit timezone fields where intent requires them.
 - The entire document validates against exactly one declared schema version before response.
 - Export responses use `Cache-Control: private, no-store`; export logs contain metadata only, not content.
@@ -64,6 +71,9 @@ The envelope contains `schemaVersion`, export timestamp, portable user profile/p
 - Secret/redaction tests covering Better Auth, OpenAI, push subscriptions, endpoint/key material,
   deliveries/queue state, environment, and logs.
 - Consistent-snapshot test under concurrent mutation.
+- AIF export/deletion races and export after thread deletion preserve committed task data and
+  separately approved memories while excluding deleted conversation/receipt/Undo content. Export
+  current approved memory after edit/removal/eviction without reconstructing it from old history.
 - Date/instant/timezone serialization and deterministic envelope/filename tests.
 - Regression test proving active/paused Focus sessions, break rows, derived habit counters, push secrets,
   notification delivery/idempotency state, and queue internals are absent.
