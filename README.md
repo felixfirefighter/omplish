@@ -1,5 +1,7 @@
 # Omplish
 
+<img width="400" height="267" alt="A4 - 1" src="https://github.com/user-attachments/assets/bf0ca51f-dcf6-4392-8f67-a57a80eb4f00" />
+
 Omplish is a self-hostable, open-source personal planning workspace being refined around an AI-first
 interaction model: describe an outcome, let the assistant manage supported task/planning changes,
 and inspect the resulting records. Task and calendar views remain editable and work without AI.
