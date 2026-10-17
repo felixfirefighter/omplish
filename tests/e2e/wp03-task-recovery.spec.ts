@@ -160,7 +160,8 @@ test("keyboard and touch-menu reorder remain available while offline writes are 
 
   await enterWorkspaceThroughUi(page, testInfo);
   const destination = await createRegularList(page, "Keyboard destination");
-  await page.reload();
+  const source = await createRegularList(page, "Keyboard source");
+  await page.goto(`/lists/${source.id}`);
   const alpha = await quickAddTask(page, "Alpha keyboard task");
   const beta = await quickAddTask(page, "Beta keyboard task");
 
@@ -174,6 +175,9 @@ test("keyboard and touch-menu reorder remain available while offline writes are 
     const alphaHandle = taskRow(page, alpha.id).getByRole("button", { name: `Reorder ${alpha.title}` });
     await alphaHandle.focus();
     await alphaHandle.press("Space");
+    await expect(
+      page.getByRole("status").filter({ hasText: `${alpha.title} picked up at position 2 of 2.` }),
+    ).toBeVisible();
     await alphaHandle.press("ArrowUp");
     await expect(
       page.getByRole("status").filter({ hasText: `${alpha.title} moved to position 1 of 2.` }),

@@ -29,7 +29,6 @@ import { createAuthenticationGateway } from "../infrastructure/authentication-ga
 import { createDemoEntryLimiter } from "../infrastructure/demo-entry-limiter";
 import { createPreferencesRepository } from "../infrastructure/preferences-repository";
 import type { StoredPreferences } from "../infrastructure/preferences-repository";
-import { isDemoAccountEmail } from "../infrastructure/demo-account-policy";
 
 export function createIdentityApplication({
   database,
@@ -196,6 +195,11 @@ export function createIdentityApplication({
   }
 
   async function enterDemo(headers: Headers): Promise<DemoEntryResult> {
+    const current = await authentication.findSession(headers);
+    if (current) {
+      await bootstrapAccount(current.actor.userId);
+      return { actor: current.actor, mode: "resumed", setCookieHeaders: [] };
+    }
     const clientAddress = authentication.findClientAddress(headers);
     // A local browser normally has no proxy-provided client address. Do not make all local
     // visitors share one five-attempt bucket; production still fails closed when the proxy
@@ -206,13 +210,6 @@ export function createIdentityApplication({
       }
     }
 
-    const current = await authentication.findSession(headers);
-    if (current && isDemoAccountEmail(current.email)) {
-      await bootstrapAccount(current.actor.userId);
-      await resetDemoWorkspace(current.actor.userId);
-      return { actor: current.actor, mode: "reset", setCookieHeaders: [] };
-    }
-
     const created = await authentication.createDemoAccount(headers);
     await bootstrapAccount(created.identity.actor.userId);
     await resetDemoWorkspace(created.identity.actor.userId);
@@ -221,6 +218,12 @@ export function createIdentityApplication({
       mode: "created",
       setCookieHeaders: created.setCookieHeaders,
     };
+  }
+
+  async function resetDemo(headers: Headers): Promise<DemoEntryResult> {
+    const actor = await resolveActor(headers);
+    await resetDemoWorkspace(actor.userId);
+    return { actor, mode: "reset", setCookieHeaders: [] };
   }
 
   async function resetDemoWorkspace(userId: string): Promise<void> {
@@ -237,6 +240,7 @@ export function createIdentityApplication({
   return {
     bootstrapAccount,
     enterDemo,
+    resetDemo,
     getOptionalSessionIdentity,
     getOnboardingState,
     getUserPreferences,

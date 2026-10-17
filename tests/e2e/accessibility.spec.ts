@@ -1,9 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
-import { randomUUID } from "node:crypto";
 
 import { expect, test, type BrowserContext, type Page, type TestInfo } from "@playwright/test";
 
-import { postDemoFromPage } from "./support/wp01-auth";
+import { enterWorkspaceThroughUi } from "./support/wp01-auth";
 
 const demo = {
   listId: "20000000-0000-4000-8000-000000000001",
@@ -149,6 +148,7 @@ test("every released route keeps its accessibility contract in the dark theme", 
   );
   test.setTimeout(180_000);
   await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
+  await page.addInitScript(() => localStorage.setItem("omplish-theme-preference", "dark"));
 
   for (const route of publicRoutes) {
     await auditRoute(page, route);
@@ -157,6 +157,15 @@ test("every released route keeps its accessibility contract in the dark theme", 
   }
 
   await enterIsolatedDemo(page, testInfo);
+  const preferencesResponse = await page.context().request.get("/api/v1/preferences");
+  expect(preferencesResponse.status()).toBe(200);
+  const preferences = (await preferencesResponse.json()) as { version: number };
+  const appearanceResponse = await page.context().request.patch("/api/v1/preferences", {
+    headers: { origin: "http://127.0.0.1:3107" },
+    data: { expectedVersion: preferences.version, patch: { theme: "dark" } },
+  });
+  expect(appearanceResponse.status()).toBe(200);
+  await page.reload();
   const dismissTips = page.getByRole("button", { name: "Dismiss getting started tips" });
   if (await dismissTips.isVisible()) await dismissTips.click();
 
@@ -196,12 +205,7 @@ async function openRoute(page: Page, route: Readonly<{ path: string; heading: st
 }
 
 async function enterIsolatedDemo(page: Page, testInfo: TestInfo) {
-  const seed = randomUUID().replaceAll("-", "");
-  const clientAddress = `2001:db8:${seed.slice(0, 4)}:${seed.slice(4, 8)}:${seed.slice(8, 12)}:${seed.slice(12, 16)}::1`;
-  await page.setExtraHTTPHeaders({ "x-real-ip": clientAddress });
-  expect(await postDemoFromPage(page), `${testInfo.project.name} demo entry`).toBe(200);
-  await page.goto("/inbox");
-  await expect(page.getByRole("main").getByRole("heading", { level: 1, name: "Inbox" })).toBeVisible();
+  await enterWorkspaceThroughUi(page, testInfo);
 }
 
 async function auditQuickAddDraft(page: Page) {
@@ -237,6 +241,8 @@ async function auditCalendar(page: Page) {
     await expect(page.locator(`[data-view="${view.toLowerCase()}"]`)).toBeVisible();
     await expectNoSevereViolations(page);
   }
+
+  await openRoute(page, { path: "/calendar", heading: "Calendar" });
 
   const firstAvailableTask = taskSelector.locator('option:not([value=""])').first();
   await expect(firstAvailableTask).toBeAttached();

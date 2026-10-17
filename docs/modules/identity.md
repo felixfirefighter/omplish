@@ -36,7 +36,10 @@ identity or copied into the server auth tables.
 - `resolveActor(headers)` returns the provider-neutral actor for protected application work.
 - `bootstrapAccount(userId)` opens one transaction, creates preferences, and calls the tasks Inbox
   bootstrap port inside it.
-- `enterDemo(headers)` is the internal isolated-workspace bootstrap used by the direct-launch flow.
+- `enterDemo(headers)` ensures the current authenticated workspace, or allocates/seeds a fresh actor
+  when no valid session exists. Existing actors bypass the allocation limiter and return `resumed`.
+- `resetDemo(headers)` requires the authenticated actor and deliberately resets only its demo dataset
+  transactionally. It is distinct from deleting the current account through Reset app.
 - `getUserPreferences(actor)` and `updateUserPreferences(actor, expectedVersion, patch)` own the
   canonical preferences contract.
 - `getOnboardingState(actor)`, `completeOnboarding(actor, goals)`, and `recordCheckin(actor, mood, note)`
@@ -49,7 +52,14 @@ identity or copied into the server auth tables.
 - A locally cached username is trimmed, non-empty, limited to 64 characters, and never treated as an
   authorization claim.
 - The direct-launch flow stores the username locally only after the server workspace bootstrap
-  succeeds.
+  and authoritative onboarding read succeed, including a retry after an accepted cookie/lost body.
+- `POST /api/v1/demo` accepts `{}` or a zero-byte JSON body as nondestructive ensure/resume.
+  Deliberate dataset reset requires exactly `{"intent":"reset-demo","confirm":true}` and a valid
+  session. Neither a demo email suffix nor a submitted actor ID authorizes reset.
+- Launcher retry reads the existing workspace first. Only an unauthenticated/forbidden session read
+  falls back to ensure; transient read failures never trigger reset or fresh allocation.
+- Optional provider settings have a bounded startup read. Missing/unreadable settings produce an
+  explicit manual fallback; startup never repairs or overwrites an encrypted credential implicitly.
 - An internal workspace actor has exactly one preferences row and exactly one active Inbox after
   bootstrap.
 - The authenticated browser synchronizes its canonical IANA system timezone to the preferences row;
@@ -87,7 +97,8 @@ identity or copied into the server auth tables.
 ## Urgent lifecycle acceptance
 
 U01, U05, and U09 in `docs/IMPLEMENTATION_PLAN.md` repair the existing lifecycle to meet these
-requirements. They are acceptance targets, not a claim that the current implementation passes.
+requirements. U01's nondestructive paths are implemented; renewal and protected desktop recovery
+remain U05/U09 acceptance targets. See the plan for current verification boundaries.
 
 - Ordinary bootstrap/ensure/resume, including legacy `enterDemo` callers, never resets an existing
   authenticated workspace. Explicit demo reset and Reset app retain separate deliberate intent.

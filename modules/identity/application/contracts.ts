@@ -14,7 +14,7 @@ export type DemoDatasetSeeder = {
 
 export type DemoEntryResult = Readonly<{
   actor: AuthenticatedActor;
-  mode: "created" | "reset";
+  mode: "created" | "resumed" | "reset";
   setCookieHeaders: readonly string[];
 }>;
 

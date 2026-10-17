@@ -94,6 +94,12 @@ diff → confirmed inferred plan → committed receipt and live views → explic
 
 ### AIF1 — Freeze interfaces and evaluate the harness
 
+The [isolated comparison](research/AIF1_HARNESS_EVALUATION.md) selects the existing direct OpenAI SDK
+for the first bounded implementation; no framework dependency or checkpoint storage is approved.
+Its synthetic transport/control-flow evidence does not close the interface/schema/limit freeze or
+prove production execution safety. The subtasks below remain open where their full criteria lack
+evidence, including actual token/connection/shipped-size measurements.
+
 - [ ] AIF1.1 Freeze the command policy, exact confirmation binding, history/memory/delete/export
   behavior, receipt fields, thread concurrency/cancellation semantics, and interfaces owned by
   assistant versus tasks/planning/companion. Review the conflict/deny cases before happy paths.
@@ -113,8 +119,14 @@ diff → confirmed inferred plan → committed receipt and live views → explic
   Do not use startup DDL or assume `thread_id` authorizes anything.
 - [ ] AIF1.4 Select the simplest passing harness, record the decision and exact stack/data requirements,
   and re-estimate remaining effort. Stop framework adoption if it weakens provider policy, domain
-  idempotency, tenancy, or deletion. The direct SDK remains the comparator, not a second production
-  orchestration path to maintain indefinitely.
+  idempotency, tenancy, or deletion. The direct SDK is the selected production path; retain the
+  framework only as an isolated research comparator unless a later adoption gate passes.
+
+Remaining AIF2–AIF5 engineering estimate: **116–200 hours** (AIF2 32–56, AIF3 16–28,
+AIF4 48–80, AIF5 20–36). This includes command/receipt/Undo, conversational proof, bounded history
+and lifecycle integration, and integrated verification. It excludes unfinished AIF1 contract review,
+urgent hardening, N01, approval/device waiting, and other remaining release features. Re-estimate
+after the concrete authority/persistence/resource freeze; this is not a delivery date.
 
 Gate: reviewed interfaces and repeatable comparison evidence; no benchmark or framework capability
 claim without its fixture/result. AIF1 can run without native target access and cannot weaken U gates.
@@ -275,10 +287,10 @@ independent implementation proceeds, but its checkpoint/finding cannot be marked
 Files: `.github/workflows/ci.yml`, `.github/workflows/publish-desktop.yml`,
 `scripts/stage-desktop-runtime.mjs`, owning script tests, setup/deployment/quality contracts.
 
-- [ ] U00.1 Record the exact source SHA, dirty diff, lockfile, runtime manifest, toolchain, available
+- [x] U00.1 Record the exact source SHA, dirty diff, lockfile, runtime manifest, toolchain, available
   native targets, and current failing gates in review evidence. Preserve the audit document and
   unrelated work; use disposable test databases/profiles with synthetic content.
-- [ ] U00.2 Make desktop publication depend on canonical verification of the same immutable commit
+- [x] U00.2 Make desktop publication depend on canonical verification of the same immutable commit
   SHA. Retain main/master automatic unsigned-prerelease triggers and honest labels; a failed,
   cancelled, skipped, or missing required job must prevent publishing. Require the declared U10
   native acceptance evidence too: until those gates exist and pass for the same SHA/artifacts,
@@ -286,15 +298,19 @@ Files: `.github/workflows/ci.yml`, `.github/workflows/publish-desktop.yml`,
   repository settings as part of this change.
 - [ ] U00.3 Align the CI-built image with Compose's expected image, using one explicit tag/digest.
   Prove `--no-build` starts the newly built image on a clean runner with no cached fallback.
-- [ ] U00.4 Repair staging containment with native relative-path semantics, preserving the guard
+- [x] U00.4 Repair staging containment with native relative-path semantics, preserving the guard
   before recursive deletion. Cover POSIX/Windows roots, normal descendants, sibling prefixes,
   traversal, drive/UNC changes, symlink/junction ancestors, and source/destination overlap.
   Verify committed archive checksums before extraction and fail on unexpected manifest mutation.
-- [ ] U00.5 Run script tests and static workflow review. Carry clean-runner execution evidence into
+- [x] U00.5 Run script tests and static workflow review. Carry clean-runner execution evidence into
   U10; a locally valid YAML file alone does not establish remote CI success.
 
 Exit: the local release configuration fails closed, staging remains contained, and the image-name
 defect is repaired. No claim that a prior executable is secure or that a remote workflow ran.
+Local exit criteria pass; U00.3's clean-runner execution proof remains open for U10. The final local
+Compose smoke starts with `--no-build` and verifies both services against the newly built image ID.
+Native installer acceptance and remote CI have not run; publication is explicitly blocked pending U10.
+See [local verification evidence](research/U00_U01_VERIFICATION.md).
 
 ### U01 — Make ordinary bootstrap and retry nondestructive
 
@@ -302,18 +318,18 @@ Files: `modules/identity/{application,infrastructure,presentation}`, `app/api/v1
 task demo composition, API/browser fixtures; `docs/modules/identity.md` and G1/G4 contracts.
 No schema change expected.
 
-- [ ] U01.1 Reproduce the existing-session GET failure → Retry deletion with a customized workspace.
+- [x] U01.1 Reproduce the existing-session GET failure → Retry deletion with a customized workspace.
   Assert task IDs/content, preferences, proposal, Companion state, and stored provider credential.
-- [ ] U01.2 Separate authoritative ensure/resume from deliberate demo reset. Reuse a valid session
+- [x] U01.2 Separate authoritative ensure/resume from deliberate demo reset. Reuse a valid session
   even if localStorage has no username. A legacy empty-body `POST /api/v1/demo` must become a
   nondestructive compatibility path so cached/older clients cannot retain the deletion behavior.
-- [ ] U01.3 Keep fresh-actor seeding and scoped explicit reset, migrate fixture callers to deliberate
+- [x] U01.3 Keep fresh-actor seeding and scoped explicit reset, migrate fixture callers to deliberate
   reset, and require clear intent/confirmation at any user-facing destructive action. The demo email
   suffix cannot distinguish disposable data: current personal profiles use it too.
-- [ ] U01.4 Charge bootstrap allocation limits only when creating an actor, not when resuming one.
+- [x] U01.4 Charge bootstrap allocation limits only when creating an actor, not when resuming one.
   Recover from missing/unreadable optional provider settings without blocking manual startup; keep
   the provider unavailable until repaired, without overwriting its stored key.
-- [ ] U01.5 Prove retry after a lost response from an authenticated request (or a first response whose
+- [x] U01.5 Prove retry after a lost response from an authenticated request (or a first response whose
   `Set-Cookie` was accepted before its body was lost), missing localStorage, port change with a
   valid cookie, and legacy `/demo` calls preserve the same actor/data. Losing the entire anonymous
   first response including its cookie provides no browser ownership proof; retain its data without
@@ -323,6 +339,9 @@ No schema change expected.
 Exit: ordinary launch/retry cannot erase an authenticated workspace. Cookie-loss recovery is not
 claimed by this checkpoint. Gate: focused unit/real-DB tests plus affected G1/G4, a11y/responsive
 checks for changed flow, format/lint/type/boundaries, and route build.
+Local U01 acceptance passes; [evidence and limits](research/U00_U01_VERIFICATION.md) distinguish it
+from full release verification. The dependency audit and existing mobile Calendar accessibility
+failure remain open. No cookie-loss recovery, cookie-renewal, or native installer success is inferred.
 
 ### U02 — Patch dependencies and refresh the shipped inventory
 
@@ -790,6 +809,11 @@ Gate:
   requires explicit screenshot approval before its dependent P0.2 rollout; silence is not approval.
 
 ### P0.2 — Close verified gaps within the approved system
+
+Known acceptance gap: the empty mobile Week calendar's scrollable frame fails axe
+`scrollable-region-focusable`. Give the region appropriate keyboard access and verify populated/
+empty Week states with keyboard and a11y checks. Keep the full release gate open until repaired;
+U01's launch-flow evidence does not certify the unchanged Calendar surface.
 
 After P0.1, repair only inventoried gaps, using non-overlapping presentation lanes where needed:
 

@@ -168,7 +168,9 @@ describe("isolated demo entry", () => {
     await insertPendingProposal(identity!.actor.userId);
     await insertPendingProposal(otherIdentity!.actor.userId);
 
-    const resetResponse = await POST(demoMutationRequest({ clientAddress: "203.0.113.91", cookie }));
+    const resetResponse = await POST(
+      demoMutationRequest({ clientAddress: "203.0.113.91", cookie, reset: true }),
+    );
     expect(resetResponse.status).toBe(200);
     await expect(resetResponse.json()).resolves.toEqual({ mode: "reset", redirectTo: "/inbox" });
     const proposals = await database
@@ -233,7 +235,9 @@ describe("isolated demo entry", () => {
     );
 
     try {
-      const failedReset = await POST(demoMutationRequest({ clientAddress: "203.0.113.93", cookie }));
+      const failedReset = await POST(
+        demoMutationRequest({ clientAddress: "203.0.113.93", cookie, reset: true }),
+      );
       expect(failedReset.status).toBe(500);
       expect(
         await database
@@ -276,7 +280,7 @@ describe("isolated demo entry", () => {
       ]),
     );
 
-    await application.enterDemo(
+    await application.resetDemo(
       demoRequest("192.0.2.30", cookiesFromSetCookie(demoA.setCookieHeaders)).headers,
     );
 
@@ -326,11 +330,13 @@ function demoMutationRequest({
   contentType = "application/json",
   clientAddress = "203.0.113.90",
   cookie,
+  reset = false,
 }: {
   origin?: string | null;
   contentType?: string;
   clientAddress?: string;
   cookie?: string;
+  reset?: boolean;
 }) {
   const headers = new Headers({
     "content-type": contentType,
@@ -342,7 +348,10 @@ function demoMutationRequest({
   return new Request(`${authRuntime.baseUrl}/api/v1/demo`, {
     method: "POST",
     headers,
-    body: contentType === "application/json" ? JSON.stringify({}) : "demo=true",
+    body:
+      contentType === "application/json"
+        ? JSON.stringify(reset ? { intent: "reset-demo", confirm: true } : {})
+        : "demo=true",
   });
 }
 

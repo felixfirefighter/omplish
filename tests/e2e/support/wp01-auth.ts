@@ -1,6 +1,8 @@
 import { expect, type Page, type TestInfo } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 
+import { configureTestTimeZone } from "./golden-path-planning";
+
 export type TestAccount = Readonly<{
   email: string;
   password: string;
@@ -33,6 +35,8 @@ export async function enterWorkspaceThroughUi(
   await page.goto(`/?resume=${encodeURIComponent(destination)}`);
   const demoStatus = await postDemoFromPage(page);
   expect(demoStatus).toBe(200);
+  const browserTimezone = await page.evaluate(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
+  await configureTestTimeZone(page, browserTimezone);
   await page.goto(destination);
 
   await expect(page).toHaveURL(destination, { timeout: 30_000 });

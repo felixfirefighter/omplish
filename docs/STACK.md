@@ -81,10 +81,13 @@ Better Auth documents current Next.js integration and PostgreSQL/Drizzle support
 
 ### Release-gated dependency decisions
 
-The AIF harness candidate is TypeScript LangChain `createAgent` with its LangGraph runtime and, if
-needed, a reviewed PostgreSQL checkpointer. No LangChain/LangGraph/Deep Agents package is installed
-or approved merely by this recommendation. AIF1 compares the direct SDK against the narrow harness
-before choosing exact pins, licenses, dependency/advisory impact, runtime sizes, and interfaces.
+The [AIF1 isolated comparison](research/AIF1_HARNESS_EVALUATION.md) selects the existing direct
+OpenAI SDK for the first bounded AIF implementation. The evaluated TypeScript LangChain `createAgent`
+configuration retained disallowed raw provider metadata in checkpoints and excluded summary calls
+from its main-loop call limit. No LangChain/LangGraph/Deep Agents package is approved or installed.
+Reconsider the framework only after sanitized persistence and shared provider admission pass;
+the broader AIF1 interface/schema/resource freeze remains open. The report records exact evaluated
+pins, declared licenses, advisories, repeatable fixtures, and measurement limits.
 Keep domain code and public DTOs framework-independent; do not require hosted LangSmith or a new
 service. Default external tracing remains disabled.
 
@@ -93,7 +96,8 @@ retries, and U06 admission for tool continuations, streaming, compaction, and re
 checkpoint tables/migrations, serialization, retention/deletion, grants, and pool lifecycle against
 `docs/DATA_MODEL.md`; no ordinary-startup saver `setup()` or per-request pools. Deep Agents, generic
 filesystem/shell tools, vector infrastructure, and subagents are not initial dependencies.
-See [framework research](research/AI_FIRST_REPOSITIONING.md) for evidence and alternatives.
+See [framework research](research/AI_FIRST_REPOSITIONING.md) for alternatives and the linked
+comparison for the current technical decision. No framework checkpoint schema exception is approved.
 
 The active release approves the capabilities below, not an unchecked package installation. Both
 packages are absent from the current `package.json` and lockfile. The named work package must rerun

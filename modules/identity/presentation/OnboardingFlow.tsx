@@ -45,6 +45,7 @@ export function OnboardingFlow({
   workspace,
   initialName,
   online,
+  providerUnavailable = false,
   onNameReady,
   onComplete,
   onConnectKey,
@@ -55,6 +56,7 @@ export function OnboardingFlow({
   workspace: WorkspaceBootstrap | null;
   initialName: string | null;
   online: boolean;
+  providerUnavailable?: boolean;
   onNameReady: (name: string) => Promise<void>;
   onComplete: (goals: readonly string[]) => Promise<void>;
   onConnectKey: (apiKey: string) => Promise<KeyResult>;
@@ -86,7 +88,12 @@ export function OnboardingFlow({
   const nameReady = name.trim().length >= 2;
 
   useEffect(() => {
-    if (workspace && (phase === "greeting" || (phase === "name" && Boolean(initialName)))) {
+    if (
+      workspace &&
+      (phase === "greeting" ||
+        (phase === "name" && Boolean(initialName)) ||
+        (phase === "ack" && workspace.onboarding.complete))
+    ) {
       // Workspace data arrives after the launch shell mounts; this advances the flow to its persisted step.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPhase(
@@ -456,6 +463,11 @@ export function OnboardingFlow({
           reducedMotion={reducedMotion}
           onFinished={() => onNavigate("/today")}
         />
+      )}
+      {providerUnavailable && (
+        <p className={styles.status} role="status">
+          AI settings could not be read. You can continue with manual planning.
+        </p>
       )}
       {!online && phase !== "returning" && (
         <p className={styles.status}>You’re offline. Manual workspace setup needs one connection.</p>

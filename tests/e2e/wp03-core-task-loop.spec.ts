@@ -41,10 +41,10 @@ test("unscheduled quick add can be inspected, enriched, organized, completed, an
 
   await page.getByRole("button", { name: /Tags/u }).click();
   const tagsDialog = page.getByRole("dialog", { name: "Tags" });
-  await tagsDialog.getByLabel("New tag", { exact: true }).fill("Launch");
+  await tagsDialog.getByLabel("New tag", { exact: true }).fill("G1 audit");
   await tagsDialog.getByLabel("New tag color").selectOption("sky");
   await tagsDialog.getByRole("button", { name: "Add", exact: true }).click();
-  await expect(tagsDialog.getByRole("checkbox", { name: "Launch" })).toBeChecked();
+  await expect(tagsDialog.getByRole("checkbox", { name: "G1 audit" })).toBeChecked();
   await tagsDialog.getByRole("button", { name: "Save tags" }).click();
   await expect(tagsDialog).toBeHidden();
 
@@ -105,7 +105,7 @@ test("unscheduled quick add can be inspected, enriched, organized, completed, an
   await expect(movedRow).toBeVisible();
   await expect(movedRow.getByRole("link")).toContainText(editedTitle);
   await expect(movedRow.getByRole("img", { name: "high priority" })).toBeVisible();
-  await expect(movedRow).toContainText("Launch");
+  await expect(movedRow).toContainText("G1 audit");
 });
 
 test("task details use a desktop inspector and a mobile full-page route", async ({ page }, testInfo) => {
@@ -138,6 +138,8 @@ test("a long title and a bounded large list stay usable with a focused mobile co
   test.skip(testInfo.project.name !== "mobile-chromium", "The virtual-keyboard layout risk is mobile-only.");
 
   await enterWorkspaceThroughUi(page, testInfo);
+  const list = await createRegularList(page, "Mobile pagination proof");
+  await page.goto(`/lists/${list.id}`);
   const longTitle = "Long task title ".repeat(24).trim();
   const longTask = await quickAddTask(page, longTitle);
 
@@ -148,7 +150,7 @@ test("a long title and a bounded large list stay usable with a focused mobile co
     });
   }
 
-  await page.goto("/inbox");
+  await page.goto(`/lists/${list.id}`);
   await expect(page.locator('[data-ui="task-row"]')).toHaveCount(50);
   await page.getByRole("button", { name: "Load more tasks" }).click();
   await expect(page.locator('[data-ui="task-row"]')).toHaveCount(52);

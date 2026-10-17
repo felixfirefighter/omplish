@@ -196,9 +196,11 @@ Hard rules:
   domain modules never import the framework. No generic SQL, shell, filesystem, or subagent tools.
 - Separate transcript history, derived summaries, approved memory, and execution checkpoints. Enforce
   deletion fencing and bounded context through the assistant contract; no second long-term memory store.
-- The recommended harness candidate is TypeScript `createAgent` on LangGraph. Exact packages,
-  migration/schema exceptions, pool budgets, serialization, and provider behavior pass the AIF1/stack
-  gate before adoption. Hosted LangSmith is not an architectural requirement.
+- The [AIF1 comparison](research/AIF1_HARNESS_EVALUATION.md) selects the existing direct SDK for the
+  first bounded implementation. A framework remains conditional on sanitized persistence and shared
+  provider admission, followed by real PostgreSQL lifecycle tests. Exact interfaces, persistence,
+  pool budgets, and resource limits still require the AIF1 freeze; no framework schema exception or
+  dependency is approved. Hosted LangSmith is not an architectural requirement.
 
 The release uses Structured Outputs because OpenAI documents schema adherence and native Zod SDK helpers, while still handling explicit refusals and semantic mistakes. See `docs/modules/assistant.md`.
 

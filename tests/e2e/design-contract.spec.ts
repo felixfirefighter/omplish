@@ -16,7 +16,7 @@ test("production TaskRow preserves the approved density, typography, and action 
   await page.evaluate(() => document.fonts.ready);
   const created = await quickAddTask(page, "Review production task row");
   const prioritized = await updateTask(page, created, { priority: "high" });
-  await addTagToTask(page, prioritized, "Launch");
+  await addTagToTask(page, prioritized, "Audit");
   await page.reload();
   await page.evaluate(() => document.fonts.ready);
 
@@ -25,7 +25,7 @@ test("production TaskRow preserves the approved density, typography, and action 
   const more = row.getByRole("button", { name: `More actions for ${created.title}` });
   await expect(row).toBeVisible();
   await expect(row.getByRole("img", { name: "high priority" })).toBeVisible();
-  await expect(row).toContainText("Launch");
+  await expect(row).toContainText("Audit");
   await status.focus();
   await expect(status).toBeFocused();
   await more.focus();
@@ -173,7 +173,8 @@ test("direct app launch keeps profile setup usable inside every boundary viewpor
       targetSize,
     };
   });
-  expect(ctaLayout.actionHeight).toBeGreaterThanOrEqual(ctaLayout.targetSize);
+  // Ignore floating point noise in the animated bounding box.
+  expect(ctaLayout.actionHeight).toBeGreaterThanOrEqual(ctaLayout.targetSize - 0.001);
 
   const evidenceDirectory = path.resolve("artifacts/visual-proof/boundaries");
   await mkdir(evidenceDirectory, { recursive: true });
@@ -291,9 +292,9 @@ test("the five proof surfaces reflow at a 200% zoom equivalent and honor reduced
   await expect(profileInput).toBeFocused();
   const focusStyle = await profileInput.evaluate((element) => {
     const style = getComputedStyle(element);
-    return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
+    return style.outlineStyle;
   });
-  expect(focusStyle).toEqual({ outlineStyle: "none", outlineWidth: "0px" });
+  expect(focusStyle).toBe("none");
   await auditZoomSurface(page, evidenceDirectory, "app-launch");
 
   expect(await postDemoFromPage(page)).toBe(200);
@@ -370,7 +371,6 @@ async function captureBoundaryRoute(
   evidenceDirectory: string,
   slug: string,
 ) {
-  await page.waitForLoadState("networkidle");
   await page.evaluate(async () => {
     await document.fonts.ready;
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();

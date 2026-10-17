@@ -233,6 +233,7 @@ describe("WP02 fresh schema inventory", () => {
            on attribute.attrelid = index_record.indrelid
           and attribute.attnum = key.attnum
         where index_class.relname = 'tasks_user_list_parent_active_rank_idx'
+          and index_class.relnamespace = current_schema()::regnamespace
         group by index_record.indpred, index_record.indrelid`,
     );
     expect(subtaskRankIndex.rows).toEqual([

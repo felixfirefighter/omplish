@@ -24,7 +24,9 @@ This file is the routing index and source-of-truth map. Keep it compact. Detaile
 | Friend candidate handoff | `docs/FRIEND_TEST.md` |
 | TickTick feature research | `docs/research/TICKTICK_FEATURES.md` |
 | Architecture findings and countermeasures | `docs/research/ARCHITECTURE_AUDIT.md` (execution order: U00–U10 in `docs/IMPLEMENTATION_PLAN.md`) |
+| U00/U01 local checkpoint evidence and remaining gates | `docs/research/U00_U01_VERIFICATION.md` |
 | AI-first direction and harness evidence | `docs/research/AI_FIRST_REPOSITIONING.md` (product authority: `docs/SCOPE.md`; execution: AIF in `docs/IMPLEMENTATION_PLAN.md`) |
+| AIF1 measured harness comparison and current technical decision | `docs/research/AIF1_HARNESS_EVALUATION.md` (dependency authority: `docs/STACK.md`; AIF1 closure remains gated) |
 | Research URLs and confidence | `docs/research/SOURCES.md` |
 
 ## Planned repository shape

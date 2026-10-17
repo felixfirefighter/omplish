@@ -59,6 +59,34 @@ describe("trusted JSON mutation boundary", () => {
     });
   });
 
+  it("permits a bounded zero-byte body only when explicitly enabled", async () => {
+    await expect(readBoundedJson(mutationRequest("", { origin }), 32)).rejects.toMatchObject({
+      code: "VALIDATION_FAILED",
+    });
+    await expect(
+      readBoundedJson(mutationRequest("", { origin }), 32, { allowEmpty: true }),
+    ).resolves.toBeUndefined();
+    const request = new Request(`${origin}/api/v1/demo`, {
+      method: "POST",
+      headers: { "content-type": "application/json", origin },
+      body: new ReadableStream({ start: (controller) => controller.close() }),
+      duplex: "half",
+    } as RequestInit & { duplex: "half" });
+    await expect(readBoundedJson(request, 32, { allowEmpty: true })).resolves.toBeUndefined();
+    await expect(
+      readBoundedJson(mutationRequest("null", { origin }), 32, { allowEmpty: true }),
+    ).resolves.toBeNull();
+  });
+
+  it.each(["{", " ", '{"oversized":true}'])(
+    "retains JSON validation and byte limits with empty-body compatibility: %s",
+    async (body) => {
+      await expect(
+        readBoundedJson(mutationRequest(body, { origin }), 8, { allowEmpty: true }),
+      ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+    },
+  );
+
   it.each([
     '{"expectedVersion":1,"__proto__":{"polluted":true}}',
     '{"expectedVersion":1,"patch":{"title":"Safe","__proto__":{"polluted":true}}}',

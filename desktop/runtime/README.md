@@ -27,7 +27,9 @@ desktop/runtime/
 ```
 
 Use the repository staging helper after downloading and extracting the pinned archives. It never
-downloads or executes the runtime; it copies the extracted trees and records the archive hashes:
+downloads or executes the runtime; it verifies the reviewed manifest pins before copying the
+extracted trees. First review and commit each target's version, HTTPS source, SHA-256, and license
+in `manifest.json`. Staging rejects unknown targets or mismatches and never rewrites that manifest:
 
 ```bash
 pnpm electron:stage-runtime -- \
@@ -44,8 +46,10 @@ pnpm electron:stage-runtime -- \
 
 Run it once for every shipped target. The PostgreSQL input must be the extracted directory whose
 children are `bin/`, `lib/`, and `share/`; the Node input must contain `node` or `node.exe`. The
-command replaces only that target's generated runtime directory and updates `manifest.json`.
-Commit the manifest and keep the original archives outside Git for release reproducibility.
+command replaces only that target's generated runtime directories after validating all inputs.
+Source/target overlap and symlink/junction output ancestors are rejected before deletion. Keep the
+original archives outside Git for release reproducibility; an extracted tree must come from its
+matching verified archive. The helper does not establish that provenance for arbitrary local trees.
 
 The packaging pipeline then copies only the selected target into `dist-desktop-runtime/` before
 Electron Builder runs. An installer therefore contains one platform runtime, not the complete

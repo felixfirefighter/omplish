@@ -2,6 +2,7 @@ export {
   bootstrapAccount,
   completeOnboarding,
   enterDemo,
+  resetDemo,
   getOnboardingState,
   getIdentityRequestSecurity,
   getOptionalSessionIdentity,

@@ -6,15 +6,30 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  native-acceptance:
+    name: Require U10 native acceptance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block publication until native evidence is implemented
+        run: |
+          echo "::error::U10 native acceptance is not implemented. Publication requires same-SHA package, interactive native, upgrade, recovery, and artifact evidence for every declared target."
+          exit 1
+
   build-macos:
     name: Build macOS ARM64 DMG
     runs-on: macos-14
+    needs: verify
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24.14.1
@@ -22,10 +37,8 @@ jobs:
         run: corepack enable && corepack prepare pnpm@11.14.0 --activate
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Stage pinned desktop runtime
+      - name: Read pinned desktop runtime metadata
         shell: bash
-        env:
-          RUNTIME_ENV: ${{ runner.temp }}/desktop-runtime.env
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
@@ -40,12 +53,15 @@ jobs:
             POSTGRES_SHA256: runtime.postgres.archiveSha256,
             POSTGRES_VERSION: runtime.postgres.version,
           };
-          appendFileSync(process.env.RUNTIME_ENV, `${Object.entries(values).map(([key, value]) => `${key}=${value}`).join("\n")}\n`);
+          for (const value of Object.values(values)) {
+            if (typeof value !== "string" || /[\r\n]/.test(value)) throw new Error("Invalid runtime metadata.");
+          }
+          appendFileSync(process.env.GITHUB_ENV, `${Object.entries(values).map(([key, value]) => `${key}=${value}`).join("\n")}\n`);
           NODE
-
-          set -a
-          source "$RUNTIME_ENV"
-          set +a
+      - name: Stage pinned desktop runtime
+        shell: bash
+        run: |
+          set -euo pipefail
           workspace="$RUNNER_TEMP/desktop-runtime"
           mkdir -p "$workspace/node" "$workspace/postgres"
           node_archive="$workspace/node.tar.gz"
@@ -69,6 +85,7 @@ jobs:
             --postgres-archive "$postgres_archive" \
             --postgres-version "$POSTGRES_VERSION" \
             --postgres-source-url "$POSTGRES_URL"
+          git diff --exit-code -- desktop/runtime/manifest.json
       - name: Build installer
         run: ELECTRON_DESKTOP_TARGET=macos-arm64 pnpm electron:dist -- --mac --arm64
       - name: Audit packaged runtime
@@ -85,9 +102,12 @@ jobs:
   build-windows:
     name: Build Windows x64 EXE
     runs-on: windows-2022
+    needs: verify
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24.14.1
@@ -115,6 +135,9 @@ jobs:
           $postgresBinary = Get-ChildItem (Join-Path $workspace "postgres") -Recurse -Filter postgres.exe | Where-Object { $_.Directory.Name -eq "bin" } | Select-Object -First 1
           $postgresDirectory = $postgresBinary.Directory.Parent.FullName
           pnpm electron:stage-runtime -- --target windows-x64 --node $nodeDirectory --node-archive $nodeArchive --node-version $runtime.node.version --node-source-url $runtime.node.sourceUrl --postgres $postgresDirectory --postgres-archive $postgresArchive --postgres-version $runtime.postgres.version --postgres-source-url $runtime.postgres.sourceUrl
+          if ($LASTEXITCODE -ne 0) { throw "Pinned runtime staging failed." }
+          git diff --exit-code -- desktop/runtime/manifest.json
+          if ($LASTEXITCODE -ne 0) { throw "Runtime staging changed the committed manifest." }
       - name: Build installer
         shell: pwsh
         run: |
@@ -133,10 +156,14 @@ jobs:
 
   publish:
     name: Publish public prerelease
-    needs: [build-macos, build-windows]
+    needs: [verify, native-acceptance, build-macos, build-windows]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
       - uses: actions/download-artifact@v4
         with:
           pattern: desktop-*

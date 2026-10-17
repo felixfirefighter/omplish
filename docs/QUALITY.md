@@ -23,6 +23,12 @@ browser permission; deterministic/provider-degraded tests remain mandatory witho
 Workers run focused checks in isolated worktrees. The integration owner runs shared database,
 browser, Docker, worker, service-worker, and full gates centrally and sequentially.
 
+Desktop publication calls canonical CI at the same commit and requires the U10 native-acceptance
+gate. That gate deliberately fails while native evidence is unimplemented; build success or a
+manual boolean cannot bypass it. Local script/workflow checks do not establish a remote Actions run.
+Production CI supplies its freshly built image ID to the Compose smoke, which rejects cached or
+different application images even when web and worker happen to match each other.
+
 ## Test architecture
 
 ### Unit and property tests
@@ -86,7 +92,10 @@ evidence separate from presentation-clean comparison captures.
 
 Forced: invalid input, stale update, atomic create/schedule failure, network/offline write, User B
 guessing User A identifiers, failed launch → Retry, missing username with valid session, legacy
-bootstrap calls, and unreadable optional provider settings. Ordinary retries preserve existing data.
+bootstrap calls (including zero-byte HTTP bodies), and unreadable optional provider settings.
+Ordinary retries preserve existing data. An accepted cookie with a lost bootstrap body must resume
+the same actor, restore the local display name, and survive reload. A synthetic unreadable encrypted
+credential must remain byte-for-byte unchanged while manual startup succeeds.
 
 ### G2 — Plan across time
 
@@ -113,7 +122,8 @@ proposal, duplicate apply, and concurrent task change. Every pre-apply failure w
 
 ### G4 — Core portability and release trust
 
-1. Reset isolated demo twice without shared state.
+1. Deliberately reset isolated demo twice with authenticated intent/confirmation and no shared state.
+   Ordinary bootstrap and repeated legacy calls preserve customized actor data.
 2. Export and validate the current versioned document.
 3. Lose connectivity in an open page; rendered data stays visible/read-only and writes are disabled.
 4. Clear the internal browser session; private routes/export cannot expose the previous actor's data

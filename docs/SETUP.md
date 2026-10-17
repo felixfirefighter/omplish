@@ -61,7 +61,7 @@ PostgreSQL binaries listed in [desktop/runtime/README.md](../desktop/runtime/REA
 must not download runtimes or require Docker, Node, PostgreSQL, pnpm, or internet access on the user's
 machine.
 
-The current staged release baseline is Node.js `v24.14.1` and PostgreSQL `17.10-2`. The generated
+The current staged release baseline is Node.js `v24.14.1` and PostgreSQL `17.10-2`. The reviewed
 `desktop/runtime/manifest.json` is the source/checksum record for those artifacts.
 
 Stage each target from pinned, already-extracted archives with the repository helper:
@@ -78,9 +78,11 @@ pnpm electron:stage-runtime -- --target macos-arm64 \
   --postgres-source-url https://example.invalid/pinned-postgresql-archive
 ```
 
-Repeat for `macos-x64` and `windows-x64` as required. The helper calculates the archive hashes and
-writes `desktop/runtime/manifest.json`; do not commit the large runtime trees or original archives
-unless the release storage policy explicitly allows it.
+Repeat for `macos-x64` and `windows-x64` as required. Values above are placeholders: supply the exact
+reviewed manifest values. The helper verifies archive hashes/version/source/license before replacing
+generated target directories and leaves `desktop/runtime/manifest.json` byte-for-byte unchanged.
+Review intended pin changes separately before staging; verify archives before extracting them and
+use the extracted contents of those same archives. Do not commit large runtime trees or archives.
 
 Build the current host's installer with:
 
@@ -259,7 +261,7 @@ pnpm db:migrate
 pnpm test:db
 ```
 
-Review and commit generated SQL. `drizzle-kit push` is not an approved migration path. `pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. The app creates or resets its isolated workspace internally after the first local profile setup.
+Review and commit generated SQL. `drizzle-kit push` is not an approved migration path. `pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. First profile setup allocates/seeds an isolated actor; ordinary launch and retry preserve an authenticated workspace. Dataset reset requires a separate authenticated, explicitly confirmed request.
 
 ## Verification
 

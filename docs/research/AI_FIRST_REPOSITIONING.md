@@ -7,6 +7,10 @@ conversation history with delete/export plus separate durable memory. Canonical 
 [SCOPE](../SCOPE.md) and [assistant contract](../modules/assistant.md); the ordered work is
 [AIF1–AIF5](../IMPLEMENTATION_PLAN.md). No package, schema, runtime, or UI implementation changed.
 
+The subsequent [AIF1 comparison](AIF1_HARNESS_EVALUATION.md) selects the existing direct SDK for the
+first bounded implementation. The candidate recommendation below records the original research;
+the measured decision supersedes framework adoption advice. Interface/schema/limit freeze remains open.
+
 ## Recommendation
 
 Make conversation the primary place to express intent, clarify ambiguity, and inspect proposed work. Keep tasks and calendar as authoritative, editable views of the resulting state. Add execution receipts tied to actual application results: an assistant saying “done” is not evidence that a change committed.

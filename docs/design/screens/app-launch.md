@@ -19,6 +19,7 @@ authorization, and is written only after the internal isolated workspace bootstr
 | Missing local username | Preserve any valid authenticated workspace; collecting a display name must not reset or replace that actor. |
 | Loading | Keep the current step visible, disable duplicate submission, and announce workspace preparation or save progress. |
 | Error | Keep the current input editable, explain the failed operation, and offer retry. |
+| Provider degraded | Show the bounded settings-read failure inside the current onboarding flow, clear of the fixed mark/theme controls; allow manual continuation and preserve the stored credential. |
 | Offline | When the application server is unreachable, keep the dialog readable, disable bootstrap writes, and explain that the server connection must be restored. |
 | Permission | The username never grants access; protected routes still require the internal server actor. |
 | Lost browser session | Explain that the previous workspace cannot be recovered through a username; creation of a new workspace is separate and does not delete retained data. |

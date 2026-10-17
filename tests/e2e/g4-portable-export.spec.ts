@@ -63,7 +63,7 @@ test("a private versioned export is downloadable and excludes credentials", asyn
   expect(exportResponse.headers()["content-type"]).toContain("application/json");
   expect(exportResponse.headers()["pragma"]).toBe("no-cache");
   expect(exportResponse.headers()["x-content-type-options"]).toBe("nosniff");
-  expect(exportResponse.headers()["x-omplish-export-schema-version"]).toBe("1");
+  expect(exportResponse.headers()["x-omplish-export-schema-version"]).toBe("2");
 
   const downloadedPath = await download.path();
   expect(downloadedPath).not.toBeNull();
@@ -71,9 +71,9 @@ test("a private versioned export is downloadable and excludes credentials", asyn
   const expectedFilename = `omplish-export-${new Date(envelope.exportedAt).toISOString().slice(0, 10)}.json`;
   expect(exportResponse.headers()["content-disposition"]).toBe(`attachment; filename="${expectedFilename}"`);
   expect(download.suggestedFilename()).toBe(expectedFilename);
-  await expect(page.getByText(`Downloaded ${expectedFilename} · schema v1.`)).toBeVisible();
+  await expect(page.getByText(`Downloaded ${expectedFilename} · schema v2.`)).toBeVisible();
   expect(envelope).toMatchObject({
-    schemaVersion: 1,
+    schemaVersion: 2,
     identity: {
       schemaVersion: 1,
       profile: { email: owner.email },

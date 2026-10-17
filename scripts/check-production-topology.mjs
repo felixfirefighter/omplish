@@ -47,6 +47,16 @@ const applicationImages = new Set(
 if (applicationImages.size !== 1) {
   throw new Error("Web and worker are not running the same production image.");
 }
+const expectedImage = process.env.EXPECTED_PRODUCTION_IMAGE_ID;
+if (
+  expectedImage !== undefined &&
+  (!/^sha256:[a-f0-9]{64}$/.test(expectedImage) || !applicationImages.has(expectedImage))
+) {
+  throw new Error("Compose is not running the production image built by this verification job.");
+}
+if (process.env.CI && !expectedImage) {
+  throw new Error("CI must supply the exact production image ID built by this verification job.");
+}
 
 const workerEvents = compose(["logs", "--no-color", "worker"])
   .split("\n")

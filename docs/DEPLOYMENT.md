@@ -29,11 +29,17 @@ OS notification provider for offline desktop reminders; Web Push is not an offli
 ## Public desktop prereleases
 
 `.github/workflows/publish-desktop.yml` runs after every push to `main` or `master`. It builds the
-macOS ARM64 DMG and Windows x64 NSIS installer on their native GitHub-hosted runners, downloads the
-pinned Node/PostgreSQL runtime archives recorded in `desktop/runtime/manifest.json`, validates their
-SHA-256 values, and runs the package audit plus the headless runtime smoke before publishing assets.
+macOS ARM64 DMG and Windows x64 NSIS installer only after the reusable canonical CI gate passes for
+the same `github.sha`. Staging verifies reviewed archive pins and preserves the committed manifest.
+CI also checks that Compose runs the exact newly built application image ID.
 
-Each successful commit receives a public prerelease tag in the form
+Publication additionally requires `native-acceptance`, which deliberately fails until U10 implements
+same-commit native, upgrade/recovery, and exact-artifact evidence for every declared target, including
+macOS x64. Current build/headless-smoke jobs alone cannot satisfy that gate. U00 therefore blocks
+publication while retaining automatic triggers and unsigned prerelease policy. No remote workflow
+result is implied by these checked-in safeguards.
+
+Once every required gate passes, a successful candidate receives a public prerelease tag in the form
 `v<package-version>-build.<GitHub-run-number>`, including `SHA256SUMS.txt`. This preserves a direct
 public download path without misrepresenting every main-branch commit as a stable semantic release.
 The workflow requires `contents: write` permission for its `GITHUB_TOKEN`; repository Actions settings
@@ -46,7 +52,7 @@ prerelease as the stable public release.
 
 The checked-in `railway.json` selects the production `Dockerfile`, runs committed Drizzle migrations as a pre-deploy command, probes `/api/health/ready`, and bounds crash retries. Railway supports these settings through [Config as Code](https://docs.railway.com/config-as-code/reference), and its pre-deploy container has private-network variables available before the new deployment starts.
 
-The current green fallback does not deploy its zero-job worker. After P6 is integrated, browser
+The implemented hosted baseline does not deploy its zero-job worker. After P6 is integrated, browser
 reminders require a separately configured worker service from the same image; P6 must update this
 document with exact VAPID/encryption variables, process command, health/alerting, and degradation
 checks before any reminder-capable hosted candidate is designated.

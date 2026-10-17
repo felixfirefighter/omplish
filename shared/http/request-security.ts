@@ -33,7 +33,11 @@ function isLocalOriginAlias(requestOrigin: string | null, expectedOrigin: string
   );
 }
 
-export async function readBoundedJson(request: Request, maxBytes: number): Promise<unknown> {
+export async function readBoundedJson(
+  request: Request,
+  maxBytes: number,
+  options: Readonly<{ allowEmpty?: boolean }> = {},
+): Promise<unknown> {
   if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) {
     throw new RangeError("maxBytes must be a positive safe integer.");
   }
@@ -47,6 +51,7 @@ export async function readBoundedJson(request: Request, maxBytes: number): Promi
   }
 
   const body = await readBoundedBody(request, maxBytes);
+  if (options.allowEmpty && body.byteLength === 0) return undefined;
   try {
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body), rejectUnsafeJsonKey) as unknown;
   } catch {

@@ -31,6 +31,10 @@ export function enterDemo(headers: Headers) {
   return getApplication().enterDemo(headers);
 }
 
+export function resetDemo(headers: Headers) {
+  return getApplication().resetDemo(headers);
+}
+
 export function getOptionalSessionIdentity(headers: Headers) {
   return getApplication().getOptionalSessionIdentity(headers);
 }

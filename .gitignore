@@ -12,6 +12,7 @@ playwright-report/
 test-results/
 .playwright-mcp/
 artifacts/visual-proof/**/*.png
+artifacts/u00-u01/
 *.tsbuildinfo
 .DS_Store
 .env*

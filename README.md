@@ -26,7 +26,7 @@ pnpm db:seed
 pnpm dev
 ```
 
-`pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. Open `http://127.0.0.1:3000`; Omplish launches directly and asks for a profile username, which is cached locally before it opens a private workspace for that browser. The current implementation does not require a background worker; `pnpm worker` remains a zero-job architecture smoke until the reminder package activates jobs.
+`pnpm db:seed` is an idempotent database seed-readiness check: it verifies connectivity and intentionally writes zero records. Open `http://127.0.0.1:3000`; Omplish asks for a profile username and caches it after opening a private workspace. Ordinary launch/retry preserves the authenticated actor and its data. The name is a display preference, not ownership proof; losing browser cookies does not recover an earlier workspace. The current implementation does not require a background worker; `pnpm worker` remains a zero-job architecture smoke until the reminder package activates jobs.
 
 ## Implemented core and verification limits
 

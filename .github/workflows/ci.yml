@@ -1,6 +1,7 @@
 name: Verify
 
 on:
+  workflow_call:
   pull_request:
   push:
     branches: [main]
@@ -37,6 +38,8 @@ jobs:
       TZ: UTC
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24.18.0
@@ -51,10 +54,21 @@ jobs:
       - name: Validate Compose
         run: docker compose config --quiet
       - name: Build the production image
-        run: docker build --target runner --tag opentask:local .
+        id: production-image
+        run: |
+          docker build --target runner --tag omplish:local .
+          docker image inspect --format '{{.Id}}' omplish:local > "${RUNNER_TEMP}/production-image-id"
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from "node:fs";
+          const imageId = readFileSync(`${process.env.RUNNER_TEMP}/production-image-id`, "utf8").trim();
+          if (!/^sha256:[a-f0-9]{64}$/.test(imageId)) throw new Error("Invalid production image ID.");
+          appendFileSync(process.env.GITHUB_OUTPUT, `image-id=${imageId}\n`);
+          NODE
       - name: Boot the production topology
         run: docker compose up --detach --no-build --wait
       - name: Verify the production topology
+        env:
+          EXPECTED_PRODUCTION_IMAGE_ID: ${{ steps.production-image.outputs.image-id }}
         run: pnpm test:production
       - name: Stop the production topology
         if: always()

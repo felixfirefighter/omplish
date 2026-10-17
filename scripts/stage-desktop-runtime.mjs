@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
-import { chmod, cp, lstat, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, rm, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { basename, dirname, join, resolve } from "node:path";
+import { assertStagingDirectoriesSafe } from "./desktop-runtime-staging-paths.ts";
 
 const targets = new Set(["windows-x64", "macos-x64", "macos-arm64"]);
 const executableNames = ["postgres", "initdb", "createdb", "pg_ctl", "psql"];
@@ -25,8 +26,6 @@ const postgresLicense = options.get("postgres-license") ?? "PostgreSQL License";
 validateUrl(nodeSourceUrl, "node-source-url");
 validateUrl(postgresSourceUrl, "postgres-source-url");
 
-const nodeArchiveSha256 = await sha256(nodeArchive);
-const postgresArchiveSha256 = await sha256(postgresArchive);
 const nodeExecutable = join(nodePath, target.startsWith("windows") ? "node.exe" : "node");
 const postgresBin = join(postgresPath, "bin");
 const requiredPostgresFiles = executableNames.map((name) =>
@@ -50,9 +49,47 @@ const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const runtimeRoot = join(repositoryRoot, "desktop", "runtime");
 const targetNodeRoot = join(runtimeRoot, "node", target);
 const targetPostgresRoot = join(runtimeRoot, "postgres", target);
+const manifestPath = join(runtimeRoot, "manifest.json");
 
-await ensureSafeGeneratedDirectory(targetNodeRoot, runtimeRoot);
-await ensureSafeGeneratedDirectory(targetPostgresRoot, runtimeRoot);
+await assertStagingDirectoriesSafe({
+  repositoryRoot,
+  runtimeRoot,
+  destinations: [targetNodeRoot, targetPostgresRoot],
+  sources: [
+    nodePath,
+    nodeExecutable,
+    postgresPath,
+    postgresBin,
+    join(postgresPath, "lib"),
+    join(postgresPath, "share"),
+    ...requiredPostgresFiles,
+  ],
+  archives: [nodeArchive, postgresArchive],
+  manifestPath,
+});
+const manifestContents = await readFile(manifestPath, "utf8");
+const manifest = await readManifest(manifestPath);
+const pinned = manifest.targets?.[target];
+if (manifest.schemaVersion !== 1 || !pinned) fail("Runtime target has no reviewed manifest entry.");
+const nodeArchiveSha256 = await sha256(nodeArchive);
+const postgresArchiveSha256 = await sha256(postgresArchive);
+assertPinned(
+  pinned.node,
+  { version: nodeVersion, sourceUrl: nodeSourceUrl, archiveSha256: nodeArchiveSha256, license: nodeLicense },
+  "Node",
+);
+assertPinned(
+  pinned.postgres,
+  {
+    version: postgresVersion,
+    sourceUrl: postgresSourceUrl,
+    archiveSha256: postgresArchiveSha256,
+    license: postgresLicense,
+  },
+  "PostgreSQL",
+);
+if ((await readFile(manifestPath, "utf8")) !== manifestContents)
+  fail("Runtime manifest changed during validation.");
 await rm(targetNodeRoot, { recursive: true, force: true });
 await rm(targetPostgresRoot, { recursive: true, force: true });
 await mkdir(targetNodeRoot, { recursive: true });
@@ -67,23 +104,8 @@ if (!target.startsWith("windows")) {
   for (const name of executableNames) await chmod(join(targetPostgresRoot, "bin", name), 0o755);
 }
 
-const manifestPath = join(runtimeRoot, "manifest.json");
-const manifest = await readManifest(manifestPath);
-manifest.targets[target] = {
-  node: {
-    version: nodeVersion,
-    sourceUrl: nodeSourceUrl,
-    archiveSha256: nodeArchiveSha256,
-    license: nodeLicense,
-  },
-  postgres: {
-    version: postgresVersion,
-    sourceUrl: postgresSourceUrl,
-    archiveSha256: postgresArchiveSha256,
-    license: postgresLicense,
-  },
-};
-await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+if ((await readFile(manifestPath, "utf8")) !== manifestContents)
+  fail("Runtime manifest changed during staging.");
 
 console.log(`Staged desktop runtime for ${target}.`);
 console.log(`- Node archive SHA-256: ${nodeArchiveSha256}`);
@@ -94,6 +116,7 @@ function parseArguments(argumentsList) {
   const result = new Map();
   for (let index = 0; index < argumentsList.length; index += 1) {
     const argument = argumentsList[index];
+    if (argument === "--") continue;
     if (argument === "--help") printHelp();
     if (!argument.startsWith("--")) fail(`Unexpected argument ${argument}.`);
     const name = argument.slice(2);
@@ -130,9 +153,8 @@ async function readManifest(file) {
   try {
     const parsed = JSON.parse(await readFile(file, "utf8"));
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) fail("Invalid runtime manifest.");
-    return { schemaVersion: 1, targets: {}, ...parsed };
+    return parsed;
   } catch (error) {
-    if (error?.code === "ENOENT") return { schemaVersion: 1, targets: {} };
     if (error instanceof SyntaxError) fail(`Invalid JSON in ${file}.`);
     throw error;
   }
@@ -165,17 +187,10 @@ async function directoryExists(directory) {
   }
 }
 
-async function ensureSafeGeneratedDirectory(directory, parent) {
-  const directoryPath = resolve(directory);
-  const parentPath = resolve(parent);
-  if (directoryPath === parentPath || !directoryPath.startsWith(`${parentPath}/`)) {
-    fail(`Refusing to replace a directory outside the runtime tree: ${directoryPath}`);
-  }
-  try {
-    if ((await lstat(directoryPath)).isSymbolicLink())
-      fail(`Refusing to replace a symlink: ${directoryPath}`);
-  } catch (error) {
-    if (error?.code !== "ENOENT") throw error;
+function assertPinned(actual, expected, name) {
+  for (const [field, value] of Object.entries(expected)) {
+    if (!actual || actual[field] !== value)
+      fail(`${name} ${field} differs from the reviewed runtime manifest.`);
   }
 }
 

@@ -77,7 +77,7 @@ describe("portable PostgreSQL export", () => {
 
     expect(userExportEnvelopeSchema.parse(firstA)).toEqual(firstA);
     expect(firstA).toEqual(secondA);
-    expect(firstA.schemaVersion).toBe(1);
+    expect(firstA.schemaVersion).toBe(2);
     expect(firstA.identity.profile).toMatchObject({
       id: ownerA.userId,
       name: ownerASeed.ownerName,
